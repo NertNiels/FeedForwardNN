@@ -23,7 +23,7 @@ namespace FeedForward.Layers
             this.values.map(Activation.lrelu);
         }
 
-        public override void Backpropagate(LayerBase input, LayerBase output, Matrix errors)
+        public override void Backpropagate(LayerBase input,  Matrix errors)
         {
             // Calculating Errors
             this.errors = errors;

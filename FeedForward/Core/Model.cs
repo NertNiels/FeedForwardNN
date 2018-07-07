@@ -30,6 +30,18 @@ namespace FeedForward.Core
             return layers[layers.Length-1].values;
         }
 
+        public void Backpropagate(Matrix output, Matrix targets)
+        {
+            Matrix errors = Matrix.subtract(targets, output);
+
+            layers[layers.Length - 1].Backpropagate(layers[layers.Length - 2], errors);
+
+            for(int i = layers.Length-2; i > 0; i++)
+            {
+                layers[i].Backpropagate(layers[i - 1], layers[i + 1]);
+            }
+        }
+
         #region Initializers
         List<LayerBase> initLayers;
 

@@ -19,7 +19,7 @@ namespace FeedForward.Layers
         public Matrix bias;
 
         public abstract void FeedForward(LayerBase input);
-        public abstract void Backpropagate(LayerBase input, LayerBase output, Matrix errors);
+        public abstract void Backpropagate(LayerBase input, Matrix errors);
         public abstract void Backpropagate(LayerBase input, LayerBase output);
 
         public abstract void initWeights(Random r, LayerBase nextLayer);
