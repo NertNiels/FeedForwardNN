@@ -324,4 +324,3 @@ namespace FeedForward.Core
         }
     }
 }
-}

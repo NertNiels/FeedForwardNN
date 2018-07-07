@@ -64,7 +64,7 @@ namespace FeedForward.Layers
 
         }
 
-        public override void initWeights()
+        public override void initWeights(Random r, LayerBase nextLayer)
         {
             throw new NotImplementedException();
         }
