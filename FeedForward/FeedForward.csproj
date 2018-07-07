@@ -42,8 +42,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Activation.cs" />
     <Compile Include="Core\Matrix.cs" />
     <Compile Include="Layers\LayerBase.cs" />
+    <Compile Include="Layers\LeakyReluLayer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

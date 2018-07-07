@@ -8,6 +8,9 @@ namespace FeedForward
 {
     class Program
     {
+
+        public static float LearningRate = 0.01f;
+
         static void Main(string[] args)
         {
 
