@@ -23,6 +23,7 @@ namespace FeedForward.Layers
         public abstract void Backpropagate(LayerBase input, LayerBase output);
 
         public abstract void initWeights(Random r, LayerBase nextLayer);
+        public abstract void initWeights(Random r);
 
     }
 }

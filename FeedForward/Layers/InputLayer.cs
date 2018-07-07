@@ -32,7 +32,15 @@ namespace FeedForward.Layers
         public override void initWeights(Random r, LayerBase nextLayer)
         {
             this.weights = new Matrix(nextLayer.nodes, this.nodes);
+            this.bias = new Matrix(this.nodes, 1);
             weights.randomize(r);
+            this.bias.randomize(r);
+        }
+
+        public override void initWeights(Random r)
+        {
+            this.bias = new Matrix(this.nodes, 1);
+            this.bias.randomize(r);
         }
     }
 }

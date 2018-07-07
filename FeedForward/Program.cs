@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using FeedForward.Core;
+
 namespace FeedForward
 {
     class Program
@@ -14,6 +16,22 @@ namespace FeedForward
 
         static void Main(string[] args)
         {
+            Model nn = Model.createModel().
+                inputLayer(2).
+                leakyReluLayer(2).
+                leakyReluLayer(2).
+                endModel();
+
+            Matrix input = new Matrix(2, 1);
+            input.data = new float[,]{ { 2 }, { 1 } };
+
+            Matrix.table(input);
+
+            Matrix output = nn.FeedForward(input);
+            Matrix.table(output);
+
+            Console.WriteLine("Done!");
+
             while (true) ;
         }
 
