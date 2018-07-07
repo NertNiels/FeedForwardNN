@@ -322,5 +322,14 @@ namespace FeedForward.Core
             }
             Console.WriteLine("");
         }
+
+        public static Boolean checkForDimensions(Matrix m, int rows, int cols)
+        {
+            return m.rows == rows && m.cols == cols;
+        }
+        public static Boolean checkForDimensions(Matrix m, Matrix n)
+        {
+            return m.rows == n.rows && m.cols == n.cols;
+        }
     }
 }

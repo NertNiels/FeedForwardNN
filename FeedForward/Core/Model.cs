@@ -12,7 +12,21 @@ namespace FeedForward.Core
     {
         LayerBase[] layers;
 
+        public void FeedForward(Matrix input)
+        {
+            if(!Matrix.checkForDimensions(layers[0].values, input))
+            {
+                Program.writeErrorLine("Input Data does not have the right dimension! Please take a look at:\n\tInput:\t" + input.rows + ",\t" + input.cols + "\n\tLayer:\t" + layers[0].values.rows + ",\t" + layers[0].values.cols);
+                return;
+            }
 
+            layers[0].values = input;
+
+            for(int i = 1; i < layers.Length; i++)
+            {
+
+            }
+        }
 
         #region Initializers
         List<LayerBase> initLayers;
