@@ -31,7 +31,8 @@ namespace FeedForward.Layers
 
         public override void initWeights(Random r, LayerBase nextLayer)
         {
-            throw new NotImplementedException();
+            this.weights = new Matrix(nextLayer.nodes, this.nodes);
+            weights.randomize(r);
         }
     }
 }
