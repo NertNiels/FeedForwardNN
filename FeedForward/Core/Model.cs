@@ -12,6 +12,8 @@ namespace FeedForward.Core
     {
         LayerBase[] layers;
 
+        public float LearningRate = 0.01f;
+
         public Matrix FeedForward(Matrix input)
         {
             if(!Matrix.checkForDimensions(input, layers[0].nodes, 1))
@@ -36,7 +38,7 @@ namespace FeedForward.Core
 
             layers[layers.Length - 1].Backpropagate(layers[layers.Length - 2], errors);
 
-            for(int i = layers.Length-2; i > 0; i++)
+            for(int i = layers.Length-2; i > 0; i--)
             {
                 layers[i].Backpropagate(layers[i - 1], layers[i + 1]);
             }
@@ -57,6 +59,7 @@ namespace FeedForward.Core
             initLayers = new List<LayerBase>();
 
             InputLayer layer = new InputLayer(nodes);
+            layer.Mother = this;
 
             initLayers.Add(layer);
             return this;
@@ -65,6 +68,7 @@ namespace FeedForward.Core
         public Model leakyReluLayer(int nodes)
         {
             LeakyReluLayer layer = new LeakyReluLayer(nodes);
+            layer.Mother = this;
 
             initLayers.Add(layer);
             return this;

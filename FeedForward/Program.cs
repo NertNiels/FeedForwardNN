@@ -12,10 +12,14 @@ namespace FeedForward
     class Program
     {
 
+        public static Matrix targets = new Matrix(2, 1);
+
         public static float LearningRate = 0.01f;
 
         static void Main(string[] args)
         {
+
+            targets.data = new float[,] { { 0.5f }, { 2.3f } };
             Model nn = Model.createModel().
                 inputLayer(2).
                 leakyReluLayer(2).
@@ -23,14 +27,19 @@ namespace FeedForward
                 endModel();
 
             Matrix input = new Matrix(2, 1);
-            input.data = new float[,]{ { 2 }, { 1 } };
+            input.data = new float[,] { { 2 }, { 1 } };
+            for (int i = 0; i < 100; i++) {
+                Matrix.table(input);
 
-            Matrix.table(input);
+                Matrix output = nn.FeedForward(input);
+                Matrix.table(output);
 
-            Matrix output = nn.FeedForward(input);
-            Matrix.table(output);
+                nn.Backpropagate(output, targets);
 
-            Console.WriteLine("Done!");
+                Matrix.table(targets);
+
+                Console.WriteLine("Done Backpropagate!");
+            }
 
             while (true) ;
         }
