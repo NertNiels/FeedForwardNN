@@ -11,6 +11,10 @@ namespace FeedForward.Layers
     abstract class LayerBase
     {
 
+        protected LayerType layerType;
+        public LayerType LayerType { get { return layerType; } }
+        
+
         public int nodes;
 
         public Matrix values;
@@ -27,5 +31,11 @@ namespace FeedForward.Layers
         public abstract void initWeights(Random r, LayerBase nextLayer);
         public abstract void initWeights(Random r);
 
+    }
+
+    public enum LayerType
+    {
+        Input,
+        LeakyRelu
     }
 }

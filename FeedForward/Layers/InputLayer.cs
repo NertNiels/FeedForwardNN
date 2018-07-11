@@ -9,9 +9,9 @@ namespace FeedForward.Layers
 {
     class InputLayer : LayerBase
     {
-        public InputLayer(int nodes)
+        public InputLayer()
         {
-            this.nodes = nodes;
+            this.layerType = LayerType.Input;
         }
 
         public override void FeedForward(LayerBase input)

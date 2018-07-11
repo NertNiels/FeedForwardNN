@@ -11,9 +11,9 @@ namespace FeedForward.Layers
     class LeakyReluLayer : LayerBase
     {
 
-        public LeakyReluLayer(int nodes)
+        public LeakyReluLayer()
         {
-            this.nodes = nodes;
+            this.layerType = LayerType.LeakyRelu;
         }
         
         public override void FeedForward(LayerBase input)
