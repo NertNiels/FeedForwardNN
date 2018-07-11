@@ -21,8 +21,7 @@ namespace FeedForward.Layers
         public Matrix weights;
         public Matrix errors;
         public Matrix bias;
-
-        public Model Mother;
+        
 
         public abstract void FeedForward(LayerBase input);
         public abstract void Backpropagate(LayerBase input, Matrix errors);

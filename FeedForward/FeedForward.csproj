@@ -49,6 +49,7 @@
     <Compile Include="Core\Matrix.cs" />
     <Compile Include="Core\Model.cs" />
     <Compile Include="IO\LayerConverter.cs" />
+    <Compile Include="IO\ModelConverter.cs" />
     <Compile Include="IO\ModelFileHandler.cs" />
     <Compile Include="Layers\InputLayer.cs" />
     <Compile Include="Layers\LayerBase.cs" />

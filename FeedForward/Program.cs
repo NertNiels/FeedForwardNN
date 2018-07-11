@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using FeedForward.Core;
+using FeedForward.IO;
 
 namespace FeedForward
 {
@@ -20,12 +21,19 @@ namespace FeedForward
         {
 
             targets.data = new float[,] { { 0.5f }, { 2.3f } };
+
+            Model nn = ModelFileHandler.LoadModel(@"D:\NertNielsEntertainment\NeuralNetwork\FeedForward\jsonFile.json");
+            /*
             Model nn = Model.createModel().
                 inputLayer(2).
                 leakyReluLayer(2).
                 leakyReluLayer(2).
                 endModel();
+                */
 
+            ModelFileHandler.SaveModel(@"D:\NertNielsEntertainment\NeuralNetwork\FeedForward\jsonFile.json", nn);
+            
+            
             Matrix input = new Matrix(2, 1);
             input.data = new float[,] { { 2 }, { 1 } };
             for (int i = 0; i < 100; i++) {
@@ -40,7 +48,7 @@ namespace FeedForward
 
                 Console.WriteLine("Done Backpropagate!");
             }
-
+            
             while (true) ;
         }
 

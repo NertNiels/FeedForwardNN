@@ -52,7 +52,7 @@ namespace FeedForward.Layers
             // Calculating Gradients
             Matrix gradients = Matrix.map(Activation.dlrelu, this.values);
             gradients.hadamard(this.errors);
-            gradients.multiply(Mother.LearningRate);
+            gradients.multiply(Model.LearningRate);
 
             // Calculate Deltas
             Matrix inputValues_T = Matrix.transpose(input.values);

@@ -10,9 +10,9 @@ namespace FeedForward.Core
 {
     class Model
     {
-        LayerBase[] layers;
+        public LayerBase[] layers;
 
-        public float LearningRate = 0.01f;
+        public static float LearningRate = 0.01f;
 
         public Model() { }
 
@@ -67,7 +67,6 @@ namespace FeedForward.Core
 
             InputLayer layer = new InputLayer();
             layer.nodes = nodes;
-            layer.Mother = this;
 
             initLayers.Add(layer);
             return this;
@@ -77,7 +76,6 @@ namespace FeedForward.Core
         {
             LeakyReluLayer layer = new LeakyReluLayer();
             layer.nodes = nodes;
-            layer.Mother = this;
 
             initLayers.Add(layer);
             return this;
