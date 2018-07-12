@@ -22,7 +22,7 @@ namespace FeedForward.IO
         {
             JObject jo = JObject.Load(reader);
 
-            LayerType lt = jo["LayerType"].Value<LayerType>();
+            LayerType lt = (LayerType)jo["LayerType"].Value<int>();
 
             switch(lt)
             {

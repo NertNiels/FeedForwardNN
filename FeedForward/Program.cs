@@ -20,23 +20,24 @@ namespace FeedForward
         static void Main(string[] args)
         {
 
-            targets.data = new float[,] { { 0.5f }, { 2.3f } };
+            String path = @"C:\Users\drumm\Desktop\NeuralNetwork\jsonFile.json";
 
-            Model nn = ModelFileHandler.LoadModel(@"D:\NertNielsEntertainment\NeuralNetwork\FeedForward\jsonFile.json");
-            /*
-            Model nn = Model.createModel().
+            targets.data = new float[,] { { 0.0313f }, { 2.324f } };
+            
+            Model nn = ModelFileHandler.LoadModel(path);
+            
+            /*Model nn = Model.createModel().
                 inputLayer(2).
                 leakyReluLayer(2).
                 leakyReluLayer(2).
-                endModel();
-                */
+                endModel();*/
+                
 
-            ModelFileHandler.SaveModel(@"D:\NertNielsEntertainment\NeuralNetwork\FeedForward\jsonFile.json", nn);
-            
+
             
             Matrix input = new Matrix(2, 1);
             input.data = new float[,] { { 2 }, { 1 } };
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 1000; i++) {
                 Matrix.table(input);
 
                 Matrix output = nn.FeedForward(input);
@@ -45,10 +46,12 @@ namespace FeedForward
                 nn.Backpropagate(output, targets);
 
                 Matrix.table(targets);
-
-                Console.WriteLine("Done Backpropagate!");
             }
             
+
+            ModelFileHandler.SaveModel(path, nn);
+
+
             while (true) ;
         }
 

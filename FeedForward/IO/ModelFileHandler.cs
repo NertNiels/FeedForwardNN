@@ -26,7 +26,9 @@ namespace FeedForward.IO
 
                     JsonConverter[] converters = { new LayerConverter() };
 
-                    Model model = JsonConvert.DeserializeObject<Model>(output, converters);
+                    LayerBase[] layers = JsonConvert.DeserializeObject<LayerBase[]>(output, converters);
+
+                    Model model = new Model(layers);
 
                     return model;
                 }
@@ -44,12 +46,13 @@ namespace FeedForward.IO
             {
                 JsonSerializer serializer = new JsonSerializer();
 
+                LayerBase[] layers = model.layers;
 
                 using (StreamWriter sw = new StreamWriter(path))
                 {
                     using (JsonWriter jw = new JsonTextWriter(sw))
                     {
-                        serializer.Serialize(jw, model);
+                        serializer.Serialize(jw, layers);
                     }
                 }
                 return false;
