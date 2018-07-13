@@ -4,10 +4,12 @@ using System.Linq;
 using System.Web;
 using Microsoft.AspNet.SignalR;
 
+
 namespace NeuralNetworkTrainer.Hubs
 {
     public class DataHub : Hub
     {
+
         public void Send(string name, string message)
         {
             // Call the broadcastMessage method to update clients.
