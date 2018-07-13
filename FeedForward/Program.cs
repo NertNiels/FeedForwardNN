@@ -24,13 +24,13 @@ namespace FeedForward
 
             targets.data = new float[,] { { 0.0313f }, { 2.324f } };
             
-            Model nn = ModelFileHandler.LoadModel(path);
+            //Model nn = ModelFileHandler.LoadModel(path);
             
-            /*Model nn = Model.createModel().
+            Model nn = Model.createModel().
                 inputLayer(2).
                 leakyReluLayer(2).
                 leakyReluLayer(2).
-                endModel();*/
+                endModel();
                 
 
 

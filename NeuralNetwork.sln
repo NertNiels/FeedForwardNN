@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27102.0
+VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeedForward", "FeedForward\FeedForward.csproj", "{811D24BC-7F0F-4708-A3CE-0C55BE9691A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralNetworkTrainer", "NeuralNetworkTrainer\NeuralNetworkTrainer.csproj", "{6F74F8E9-6FDA-4EED-B906-F852323B8273}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralNetworkTrainer", "NeuralNetworkTrainer\NeuralNetworkTrainer.csproj", "{2EF9E613-7719-4273-9866-764A2282E6F3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{811D24BC-7F0F-4708-A3CE-0C55BE9691A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{811D24BC-7F0F-4708-A3CE-0C55BE9691A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{811D24BC-7F0F-4708-A3CE-0C55BE9691A4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6F74F8E9-6FDA-4EED-B906-F852323B8273}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F74F8E9-6FDA-4EED-B906-F852323B8273}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6F74F8E9-6FDA-4EED-B906-F852323B8273}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6F74F8E9-6FDA-4EED-B906-F852323B8273}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EF9E613-7719-4273-9866-764A2282E6F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EF9E613-7719-4273-9866-764A2282E6F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EF9E613-7719-4273-9866-764A2282E6F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EF9E613-7719-4273-9866-764A2282E6F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
