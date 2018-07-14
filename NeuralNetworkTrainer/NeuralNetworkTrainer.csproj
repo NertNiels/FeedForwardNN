@@ -110,8 +110,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Hubs\DataHub.cs" />
+    <Compile Include="NeuralNetworkHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NeuralNetwork\NeuralNetwork.csproj">
+      <Project>{b9190ced-9dda-425a-ad64-84c492fffa3e}</Project>
+      <Name>NeuralNetwork</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
