@@ -63,21 +63,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Activation.cs" />
-    <Compile Include="Core\Matrix.cs" />
-    <Compile Include="Core\Model.cs" />
-    <Compile Include="IO\LayerConverter.cs" />
-    <Compile Include="IO\ModelConverter.cs" />
-    <Compile Include="IO\ModelFileHandler.cs" />
-    <Compile Include="Layers\InputLayer.cs" />
-    <Compile Include="Layers\LayerBase.cs" />
-    <Compile Include="Layers\LeakyReluLayer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NeuralNetwork\NeuralNetwork.csproj">
+      <Project>{b9190ced-9dda-425a-ad64-84c492fffa3e}</Project>
+      <Name>NeuralNetwork</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
