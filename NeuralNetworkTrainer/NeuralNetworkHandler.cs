@@ -40,6 +40,7 @@ namespace NeuralNetworkTrainer
 
         public static void shuffleDataSet()
         {
+            if (DataSet == null) return;
             Random r = new Random();
             
             for(int i = 0; i < DataSet.Length; i++)

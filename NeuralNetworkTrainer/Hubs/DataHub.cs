@@ -10,10 +10,25 @@ namespace NeuralNetworkTrainer.Hubs
     public class DataHub : Hub
     {
 
-        public void Send(string name, string message)
+        public void Send(String name, String message)
         {
             // Call the broadcastMessage method to update clients.
             Clients.All.broadcastMessage(name, message);
+
         }
+
+        public void CreateNeuralNetwork(String data)
+        {
+            if (String.IsNullOrEmpty(data) || String.IsNullOrWhiteSpace(data))
+            {
+                Clients.Caller.errorMessage("The data sent were Empty or Null.");
+                return;
+            }
+            Clients.Caller.errorMessage("The data sent were Empty or Null.");
+
+            Clients.Caller.successMessage("The Neural Network was successfully made!");
+
+        }
+
     }
 }
