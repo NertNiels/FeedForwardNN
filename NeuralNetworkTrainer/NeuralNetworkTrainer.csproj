@@ -107,6 +107,7 @@
     <Content Include="Scripts\jquery.signalR-2.3.0.js" />
     <Content Include="Scripts\jquery.signalR-2.3.0.min.js" />
     <Content Include="Scripts\SignalRFunctions.js" />
+    <Content Include="Style.css" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -136,7 +137,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>49969</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:50157/</IISUrl>
+          <IISUrl>http://localhost:8080/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
