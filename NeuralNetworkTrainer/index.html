@@ -3,6 +3,7 @@
 <head>
     <title>Neural Network Trainer</title>
     <link rel="stylesheet" type="text/css" href="Style.css" />
+    <link rel="icon" type="image/png" href="/logo.png" />
 
     <script src="Scripts/jquery-1.6.4.min.js"></script>
     <script src="Scripts/jquery.signalR-2.3.0.min.js"></script>
@@ -12,6 +13,7 @@
 </head>
 <body>
     <ul>
+        <li><img src="logo.png" width="41" height="41"/></li>
         <li><a class="active" href ="index.html">Home</a></li>
         <li><a href="index.html">Stats</a></li>
         <li><a href="index.html">Network</a></li>
@@ -21,11 +23,21 @@
 
     <h1 style="text-align:center; font-size:72px;">Neural Network Training Website</h1>
 
-    <div class="information">
-        <ul>
-            <li><h3>Now Training: </h3><h3 id="nowTraining" style="color:blue;">Loading...</h3></li>
-        </ul>
-    </div>
+    <table class="information">
+        <tr>
+            <th>Now Training:</th>
+            <th id="nowTraining" style="color:blue;">Loading...</th>
+        </tr>
+        <tr>
+            <th>Type Network:</th>
+            <th id="typeNetwork" style="color:blue;">Loading...</th>
+        </tr>
+        <tr>
+            <th>Description:</th>
+            <th id="networkDiscription" style="color:blue;">Loading...</th>
+        </tr>
+
+    </table>
 
     
 </body>

@@ -13,6 +13,7 @@ ul {
     padding: 0;
     overflow: hidden;
     background-color: darkorange;
+    max-height: 44px;
 }
 
 li {
@@ -36,6 +37,23 @@ li a:hover {
     color: black;
 }
 
+.information {
+    margin: 0 auto;
+    width: 50%;
+    text-align: left;
+    border-collapse: collapse;
+}
 
+.information tr th {
+    padding: 10px;
+    font-size: 24px;
+}
+
+.information tr:nth-child(even) {
+    background-color: darkorange;
+}
+.information tr:nth-child(odd) {
+    background-color: orange;
+}
 
 
