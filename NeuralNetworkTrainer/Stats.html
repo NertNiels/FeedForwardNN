@@ -10,6 +10,7 @@
     <script src="Scripts/jquery-1.6.4.min.js"></script>
     <script src="Scripts/jquery.signalR-2.3.0.min.js"></script>
     <script src="signalr/hubs"></script>
+    <script src="Scripts/Chart.min.js"></script>
 
     <script src="Scripts/SignalRFunctions.js"></script>
 </head>
@@ -24,7 +25,37 @@
         <li style="float:right"><a href="index.html">Sign Up</a></li>
     </ul>
 
+    <h1 style="padding-left:100px;font-size:48px;">Statistics</h1>
 
+    <canvas id="loss" width="340" height="230"></canvas>
+
+    <script>
+        var ctx = document.getElementById("loss").getContext('2d');
+
+        var lossChart = new Chart(ctx, {
+            type: 'line',
+
+            data: {
+                labels: ["Not", "implemented", "yet"],
+
+                dataset: [{
+                    label: 'Loss on time.',
+                    data: [50, 20, 13],
+                    borderWidth: 1
+                }]
+            },
+
+            options: {
+                scales: {
+                    yAxis: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
 
 </body>
 </html>
