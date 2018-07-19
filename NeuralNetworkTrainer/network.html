@@ -1,7 +1,8 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>Home | Neural Network Trainer</title>
+    <meta charset="utf-8" />
+    <title>Network | Neural Network Trainer</title>
 
     <link rel="stylesheet" type="text/css" href="Style.css" />
     <link rel="icon" type="image/png" href="/logo.png" />
@@ -9,20 +10,21 @@
     <script src="Scripts/jquery-1.6.4.min.js"></script>
     <script src="Scripts/jquery.signalR-2.3.0.min.js"></script>
     <script src="signalr/hubs"></script>
+    <script src="Scripts/Chart.min.js"></script>
 
     <script src="Scripts/SignalRFunctions.js"></script>
 </head>
 <body>
     <ul>
-        <li><img src="logo.png" width="41" height="41"/></li>
-        <li><a class="active" href ="index.html">Home</a></li>
+        <li><img src="logo.png" width="41" height="41" /></li>
+        <li><a href="index.html">Home</a></li>
         <li><a href="stats.html">Statistics</a></li>
-        <li><a href="network.html">Network</a></li>
+        <li><a class="active" href="network.html">Network</a></li>
         <li style="float:right"><a href="index.html">Login</a></li>
         <li style="float:right"><a href="index.html">Sign Up</a></li>
     </ul>
 
-    <h1 style="text-align:center; font-size:72px;">Neural Network Training Website</h1>
+    <h1 style="text-align:center;font-size:72px;">Network</h1>
 
     <table class="information">
         <tr>
@@ -37,8 +39,25 @@
             <th>Description:</th>
             <th id="networkDiscription" style="color:blue;">Loading...</th>
         </tr>
+        <tr>
+            <th colspan="2"><a style="display:block;text-align:center" id="createNetworkButton">Create a Neural Network</a></th>
+        </tr>
     </table>
-
     
+    <button onclick="toggle()"></button>
+
+    <script>
+        function toggle() {
+            e = document.getElementById("createNetworkButton");
+            if (e.class === "hoverable") {
+                e.class = "";
+            } else {
+                e.class = "hoverable";
+            }
+            console.log("done " + e.class);
+        }
+
+    </script>
+
 </body>
 </html>
