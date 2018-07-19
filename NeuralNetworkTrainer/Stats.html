@@ -27,34 +27,47 @@
 
     <h1 style="padding-left:100px;font-size:48px;">Statistics</h1>
 
-    <canvas id="loss" width="340" height="230"></canvas>
+    <div style="width:75%;height:75%;margin: 0 auto;">
+        <canvas id="loss"></canvas>
+    </div>
 
     <script>
         var ctx = document.getElementById("loss").getContext('2d');
 
+        var labels = new Array(10000);
+        var data = new Array(10000);
+        var i;
+        for (i = 0; i < labels.length; i++) {
+            labels[i] = i + 1;
+            data[i] = Math.pow(i, 1.5);
+        }
+
         var lossChart = new Chart(ctx, {
+
             type: 'line',
 
             data: {
-                labels: ["Not", "implemented", "yet"],
+                labels: labels,
 
-                dataset: [{
-                    label: 'Loss on time.',
-                    data: [50, 20, 13],
-                    borderWidth: 1
+                datasets: [{
+                    label: "Neural Network Loss",
+                    data: data,
+                    pointRadius: 0,
+                    backgroundColor: ['rgba(0, 0, 255, 0.1)'],
+                    borderColor:'blue'
                 }]
             },
-
             options: {
-                scales: {
-                    yAxis: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
+                title: {
+                    fontSize: 24,
+                    fontColor: 'black',
+                    display: true,
+                    text: "Neural Network Statistics"
                 }
             }
+
         });
+        
     </script>
 
 </body>
