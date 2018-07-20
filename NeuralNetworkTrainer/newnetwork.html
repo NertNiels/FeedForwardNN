@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Create New | Neural Network Trainer</title>
+
+    <link rel="stylesheet" type="text/css" href="Style.css" />
+    <link rel="icon" type="image/png" href="/logo.png" />
+
+    <script src="Scripts/jquery-1.6.4.min.js"></script>
+    <script src="Scripts/jquery.signalR-2.3.0.min.js"></script>
+    <script src="signalr/hubs"></script>
+    <script src="Scripts/Chart.min.js"></script>
+
+    <script src="Scripts/SignalRFunctions.js"></script>
+    <script src="Scripts/GlobalFunctions.js"></script>
+</head>
+<body>
+    <ul class="navi">
+        <li><img src="logo.png" width="41" height="41" /></li>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="stats.html">Statistics</a></li>
+        <li><a class="active" href="network.html">Network</a></li>
+        <li style="float:right"><a href="index.html">Login</a></li>
+        <li style="float:right"><a href="index.html">Sign Up</a></li>
+    </ul>
+
+    <h1 class="title">Create New Network</h1>
+
+    <div>
+        <table class="information">
+            <tr id="input">
+                <th>Input</th>
+                <th>DrDoMe</th>
+                <th style="width:5%;padding:0px"><button class="button" style="color:red;" disabled="true">X</button></th>
+            </tr>
+            
+            <tr id="output">
+                <th>Output</th>
+                <th style="padding:0px"><input type="number" placeholder="number of Nodes" style="background-color:transparent;border:none;width:100%;height:100%" /></th>
+                <th style="width:5%;padding:0px"><button class="button" style="color:red;" disabled="true">X</button></th>
+            </tr>
+        </table>
+    </div>
+
+
+
+</body>
+</html>

@@ -7,7 +7,7 @@ html body {
     background-color: rgb(255, 190, 100);
 }
 
-ul {
+.navi {
     list-style-type: none; 
     margin: 0;
     padding: 0;
@@ -16,11 +16,11 @@ ul {
     max-height: 44px;
 }
 
-li {
+.navi li {
     float: left;
 }
 
-li a {
+.navi li a {
     display: block;
     color: white;
     text-align: center;
@@ -28,7 +28,7 @@ li a {
     text-decoration: none;
 }
 
-li a:hover {
+.navi li a:hover {
     background-color: orange;
 }
 
@@ -65,6 +65,11 @@ li a:hover {
     font-size: large;
     background-color: transparent;
     border: none;
+}
+
+.title {
+    text-align: center;
+    font-size: 72px;
 }
 
 
