@@ -13,6 +13,7 @@
     <script src="Scripts/Chart.min.js"></script>
 
     <script src="Scripts/SignalRFunctions.js"></script>
+    <script src="Scripts/GlobalFunctions.js"></script>
 </head>
 <body>
     <ul>
@@ -40,21 +41,17 @@
             <th id="networkDiscription" style="color:blue;">Loading...</th>
         </tr>
         <tr>
-            <th colspan="2"><a style="display:block;text-align:center" id="createNetworkButton">Create a Neural Network</a></th>
+            <th colspan="2" style="padding:0px"><button disabled="true" class="button" id="createNetworkButton" onclick="window.location.href='index.html'">Loading...</button></th>
         </tr>
     </table>
     
-    <button onclick="toggle()"></button>
+    <button onclick="toggle()">toggle</button>
 
     <script>
         function toggle() {
-            e = document.getElementById("createNetworkButton");
-            if (e.class === "hoverable") {
-                e.class = "";
-            } else {
-                e.class = "hoverable";
-            }
-            console.log("done " + e.class);
+            var e = document.getElementById("createNetworkButton");
+            e.innerHTML = "Create new Neural Network";
+            e.disabled = !e.disabled;
         }
 
     </script>
