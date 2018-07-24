@@ -12,9 +12,11 @@ namespace NeuralNetworkTrainer
     {
         public static Model network;
 
-        public static void CreateNetwork(LayerBase[] layers)
+        public static void CreateNetwork(LayerBase[] layers, String name, String type)
         {
             network = new Model(layers);
+            network.Name = name;
+            network.Type = type;
         }
         
         public static LayerBase[] getLayers()
