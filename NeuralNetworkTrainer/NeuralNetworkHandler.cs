@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
+using Dropbox.Api;
+
 using NeuralNetwork.Core;
 using NeuralNetwork.Layers;
 
@@ -51,6 +53,17 @@ namespace NeuralNetworkTrainer
                 Data t = DataSet[i];
                 DataSet[i] = DataSet[b];
                 DataSet[b] = t;
+            }
+        }
+        
+        public static async void loadDataSet(String name)
+        {
+            using (var dbx = new DropboxClient("G2U7zVJApnAAAAAAAAAAFQw6Ao_oHX93YlAcyjf_nDNeTzSwkWouzXn8krw1Dd4a"))
+            {
+                using (var response = await dbx.Files.DownloadAsync("test.txt"))
+                {
+                    String resp = await response.GetContentAsStringAsync();
+                }
             }
         }
     }

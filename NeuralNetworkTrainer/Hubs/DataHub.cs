@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Threading.Tasks;
 
 using Microsoft.AspNet.SignalR;
+
+using Dropbox.Api;
 
 using NeuralNetwork.Core;
 using NeuralNetwork.Layers;
@@ -86,6 +89,9 @@ namespace NeuralNetworkTrainer.Hubs
                             return;
                         }
                     }
+                } else if (head == "test")
+                {
+                    testDB();
                 }
                 else Clients.Caller.terminalError("That's not a valid command... Type \'help\' if you don\'t know what command to use.");
             } catch (Exception e)
@@ -96,5 +102,16 @@ namespace NeuralNetworkTrainer.Hubs
             }
         }
 
+        public async Task testDB()
+        {
+            using (var dbx = new DropboxClient("G2U7zVJApnAAAAAAAAAAFQw6Ao_oHX93YlAcyjf_nDNeTzSwkWouzXn8krw1Dd4a"))
+            {
+                using (var response = await dbx.Files.DownloadAsync("test.txt"))
+                {
+                    String resp = await response.GetContentAsStringAsync();
+                    Clients.Caller.terminalMessage(resp);
+                }
+            }
+        }
     }
 }

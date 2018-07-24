@@ -59,6 +59,7 @@ namespace FeedForward
             
             while (true) ;
         }
+        
 
 
         public static void writeErrorLine(String message, [CallerMemberName] String callerMethod = "", [CallerFilePath] String callerPath = "", [CallerLineNumber] int lineNumber = 0)
