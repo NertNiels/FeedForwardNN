@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Terminal | Neural Network Trainer</title>
+
+    <link rel="stylesheet" type="text/css" href="Style.css" />
+    <link rel="icon" type="image/png" href="/logo.png" />
+
+    <script src="Scripts/jquery-1.6.4.min.js"></script>
+    <script src="Scripts/jquery.signalR-2.3.0.min.js"></script>
+    <script src="signalr/hubs"></script>
+
+    <script src="Scripts/SignalRFunctions.js"></script>
+    <script src="Scripts/GlobalFunctions.js"></script>
+</head>
+<body>
+    <ul class="navi">
+        <li><img src="logo.png" width="41" height="41" /></li>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="stats.html">Statistics</a></li>
+        <li><a href="network.html">Network</a></li>
+        <li><a class="active" href="terminal.html">Terminal</a></li>
+        <li style="float:right"><a href="index.html">Login</a></li>
+        <li style="float:right"><a href="index.html">Sign Up</a></li>
+    </ul>
+
+    <h1 class="title">Terminal</h1>
+
+    <div style="background-color:darkblue;width:50%;height:400px;margin:0 auto;">
+        
+        <div style="background-color:black;padding-left:5px;padding-right:5px"><p style="color:red;display:inline">$*/</p><input type="text" style="color:white;width:95%;float:right;background-color:transparent;border:none;display:inline" onkeydown="enterCommand(this)" /></div>
+        <ul id="terminal" style="color:white;list-style-type:none;text-decoration:none">
+            
+        </ul>
+    </div>
+
+    <script>
+        function enterCommand(com) {
+            if (event.key == 'Enter') {
+                var term = document.getElementById("terminal");
+                var entry = document.createElement('li');
+                entry.appendChild(document.createTextNode(com.value));
+                term.insertBefore(entry, term.childNodes[0]);
+
+                sendTerminalCommand(com.value);
+
+                com.value = "";
+            }
+        }
+    </script>
+
+</body>
+</html>

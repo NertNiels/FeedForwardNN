@@ -104,7 +104,7 @@
     <Content Include="index.html" />
     <Content Include="logo.png" />
     <Content Include="network.html" />
-    <Content Include="newnetwork.html" />
+    <Content Include="terminal.html" />
     <Content Include="Scripts\Chart.min.js" />
     <Content Include="Scripts\GlobalFunctions.js" />
     <Content Include="Scripts\jquery-1.6.4.js" />

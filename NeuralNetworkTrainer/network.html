@@ -10,7 +10,6 @@
     <script src="Scripts/jquery-1.6.4.min.js"></script>
     <script src="Scripts/jquery.signalR-2.3.0.min.js"></script>
     <script src="signalr/hubs"></script>
-    <script src="Scripts/Chart.min.js"></script>
 
     <script src="Scripts/SignalRFunctions.js"></script>
     <script src="Scripts/GlobalFunctions.js"></script>
@@ -21,6 +20,7 @@
         <li><a href="index.html">Home</a></li>
         <li><a href="stats.html">Statistics</a></li>
         <li><a class="active" href="network.html">Network</a></li>
+        <li><a href="terminal.html">Terminal</a></li>
         <li style="float:right"><a href="index.html">Login</a></li>
         <li style="float:right"><a href="index.html">Sign Up</a></li>
     </ul>
@@ -40,21 +40,6 @@
             <th>Description:</th>
             <th id="networkDiscription" style="color:blue;">Loading...</th>
         </tr>
-        <tr>
-            <th colspan="2" style="padding:0px"><button disabled="true" class="button" id="createNetworkButton" onclick="window.location.href='newnetwork.html'">Loading...</button></th>
-        </tr>
-    </table>
-    
-    <button onclick="toggle()">toggle</button>
-
-    <script>
-        function toggle() {
-            var e = document.getElementById("createNetworkButton");
-            e.innerHTML = "Create new Neural Network";
-            e.disabled = !e.disabled;
-        }
-
-    </script>
 
 </body>
 </html>

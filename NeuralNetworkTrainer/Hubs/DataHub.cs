@@ -30,5 +30,10 @@ namespace NeuralNetworkTrainer.Hubs
 
         }
 
+        public void TerminalCommand(String command)
+        {
+            Clients.Caller.errorTerminalMessage(command + "YA TEST");
+            Clients.Caller.successTerminalMessage(command + "YA TEST");
+        }
     }
 }
