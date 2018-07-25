@@ -38,7 +38,7 @@ namespace FeedForward
 
                 Matrix input = new Matrix(2, 1);
                 input.data = new float[,] { { 2 }, { 1 } };
-                for (int i = 0; i < 1000; i++)
+                for (int i = 0; i < 10; i++)
                 {
                     Matrix.table(input);
 
@@ -56,8 +56,10 @@ namespace FeedForward
             {
                 writeErrorStackTrace(e.Message, e.StackTrace);
             }
-            
-            while (true) ;
+
+            GoogleDriveHandler.DriveTest();
+
+            Console.Read();
         }
         
 
