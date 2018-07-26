@@ -46,5 +46,37 @@ namespace NeuralNetwork.IO
             }
         }
 
+        public static Model LoadModelFromString(String output)
+        {
+            JsonConverter[] converters = { new LayerConverter() };
+
+            LayerBase[] layers = JsonConvert.DeserializeObject<LayerBase[]>(output, converters);
+
+            Model model = new Model(layers);
+
+            return model;
+        }
+
+        public static String SaveModelToString(Model model)
+        {
+            JsonSerializer serializer = new JsonSerializer();
+
+            LayerBase[] layers = model.layers;
+
+            Stream stream = new MemoryStream();
+
+            using (StreamWriter sw = new StreamWriter(stream))
+            {
+                using (JsonWriter jw = new JsonTextWriter(sw))
+                {
+                    serializer.Serialize(jw, layers);
+                    using (StreamReader sr = new StreamReader(stream))
+                    {
+                        return sr.ReadToEnd();
+                    }
+                }
+            }
+        }
+
     }
 }

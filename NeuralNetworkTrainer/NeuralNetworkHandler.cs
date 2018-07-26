@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Linq;
 using System.Web;
 
-using Dropbox.Api;
+using Newtonsoft.Json;
 
 using NeuralNetwork.Core;
+using NeuralNetwork.IO;
 using NeuralNetwork.Layers;
 
 namespace NeuralNetworkTrainer
@@ -20,12 +22,12 @@ namespace NeuralNetworkTrainer
             network.Name = name;
             network.Type = type;
         }
-        
+
         public static LayerBase[] getLayers()
         {
             if (network == null) return null;
             return network.layers;
-        } 
+        }
 
         public static void Train()
         {
@@ -33,6 +35,21 @@ namespace NeuralNetworkTrainer
             {
 
             }
+        }
+
+        public static void LoadNetwork(String networkName, String datasetName)
+        {
+            GoogleDriveHandler.GoogleDriveLogin("credentials.json");
+
+            String networkId = GoogleDriveHandler.GetFileIdByName(networkName + "-nn");
+            String datasetId = GoogleDriveHandler.GetFileIdByName(datasetName + "-ds");
+
+            String networkContent = GoogleDriveHandler.DownloadGoogleDocument(networkId, "text/plain", Encoding.UTF8);
+            String datasetContent = GoogleDriveHandler.DownloadGoogleDocument(datasetId, "text/plain", Encoding.UTF8);
+
+            network = ModelFileHandler.LoadModelFromString(networkContent);
+            DataKeeper.LoadDataSet(datasetContent);
+            DataKeeper.ShuffleDataSet();
         }
     }
 
@@ -42,7 +59,7 @@ namespace NeuralNetworkTrainer
 
         public static Data[] DataSet;
 
-        public static void shuffleDataSet()
+        public static void ShuffleDataSet()
         {
             if (DataSet == null) return;
             Random r = new Random();
@@ -56,16 +73,14 @@ namespace NeuralNetworkTrainer
             }
         }
         
-        public static async void loadDataSet(String name)
+
+        public static void LoadDataSet(String content)
         {
-            using (var dbx = new DropboxClient("G2U7zVJApnAAAAAAAAAAFQw6Ao_oHX93YlAcyjf_nDNeTzSwkWouzXn8krw1Dd4a"))
-            {
-                using (var response = await dbx.Files.DownloadAsync("test.txt"))
-                {
-                    String resp = await response.GetContentAsStringAsync();
-                }
-            }
+            DataSet = JsonConvert.DeserializeObject<Data[]>(content);
         }
+
+
+
     }
 
     public class Data
