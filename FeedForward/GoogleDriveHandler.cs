@@ -22,13 +22,13 @@ namespace FeedForward
         static string[] Scopes = { DriveService.Scope.Drive };
         static string ApplicationName = "Neural Network Trainer";
 
+        static UserCredential credential;
         static DriveService service;
 
-        public static async void DriveTest()
+        public static void GoogleDriveLogin(String credentialsFile)
         {
-            UserCredential credential;
 
-            using (var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
+            using (var stream = new FileStream(credentialsFile, FileMode.Open, FileAccess.Read))
             {
                 String credPath = "token.json";
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(GoogleClientSecrets.Load(stream).Secrets, Scopes, "user", CancellationToken.None, new FileDataStore(credPath, true)).Result;
@@ -41,42 +41,26 @@ namespace FeedForward
                 HttpClientInitializer = credential,
                 ApplicationName = ApplicationName
             });
-
-            Console.WriteLine(DownloadGoogleDocument(getFileIdByName("boe"), "text/plain"));
-            UploadGoogleDocument("TestTestDubbelTTESTSSTTSTETS$$@%!#%\nfsafasd", "test", "application/vnd.google-apps.document", "text/plain");
-
-            
         }
 
-        public static void viewFileList()
+        public static async Task<Boolean> GoogleDriveLogout(String credentialsFile)
+        {
+            service = null;
+            return await credential.RevokeTokenAsync(CancellationToken.None);
+        }
+
+        public static IList<Google.Apis.Drive.v3.Data.File> GetFileList()
         {
             FilesResource.ListRequest listRequest = service.Files.List();
             listRequest.PageSize = 10;
             listRequest.Fields = "nextPageToken, files(id, name)";
 
-            IList<Google.Apis.Drive.v3.Data.File> files = listRequest.Execute().Files;
-
-            Console.WriteLine("Files:");
-            if (files != null && files.Count > 0)
-            {
-                foreach (var file in files)
-                {
-                    Console.WriteLine("{0} ({1})", file.Name, file.Id);
-                }
-            }
-            else
-            {
-                Console.WriteLine("No files found.");
-            }
+            return listRequest.Execute().Files;
         }
 
-        public static String getFileIdByName(String name)
+        public static String GetFileIdByName(String name)
         {
-            FilesResource.ListRequest listRequest = service.Files.List();
-            listRequest.PageSize = 10;
-            listRequest.Fields = "nextPageToken, files(id, name)";
-
-            IList<Google.Apis.Drive.v3.Data.File> files = listRequest.Execute().Files;
+            IList<Google.Apis.Drive.v3.Data.File> files = GetFileList();
 
             if (files != null && files.Count > 0)
             {
@@ -93,7 +77,7 @@ namespace FeedForward
         {
             var stream = new MemoryStream();
             var request = service.Files.Export(fileId, mime);
-
+            
             request.MediaDownloader.ProgressChanged += (IDownloadProgress progress) =>
             {
                 switch (progress.Status)
@@ -118,6 +102,18 @@ namespace FeedForward
 
             request.Download(stream);
             return stream;
+        }
+
+        public static String DownloadGoogleDocument(String fileId, String mime, Encoding encoding)
+        {
+            Stream stream = DownloadGoogleDocument(fileId, mime);
+
+            stream.Seek(0, SeekOrigin.Begin);
+
+            using(var sr = new StreamReader(stream))
+            {
+                return sr.ReadToEnd();
+            }
         }
 
         public static Stream DownloadDocument(String fileId)
@@ -151,7 +147,19 @@ namespace FeedForward
             return stream;
         }
 
-        public static void UploadGoogleDocument(String input, String name, String uploadMime, String localMime)
+        public static String DownloadDocument(String fileId, String mime, Encoding encoding)
+        {
+            Stream stream = DownloadGoogleDocument(fileId, mime);
+
+            stream.Seek(0, SeekOrigin.Begin);
+
+            using (var sr = new StreamReader(stream))
+            {
+                return sr.ReadToEnd();
+            }
+        }
+
+        public static void UploadGoogleDocument(String content, String name, String uploadMime, String localMime)
         {
             var fileMetaData = new Google.Apis.Drive.v3.Data.File()
             {
@@ -161,7 +169,7 @@ namespace FeedForward
 
             FilesResource.CreateMediaUpload request;
 
-            byte[] bytes = Encoding.UTF8.GetBytes(input);
+            byte[] bytes = Encoding.UTF8.GetBytes(content);
 
             Stream stream = new MemoryStream(bytes);
 
@@ -198,7 +206,7 @@ namespace FeedForward
             Console.WriteLine("File ID: " + file.Id);
         }
 
-        public static void UploadDocument(String input, String name, String localMime)
+        public static void UploadDocument(String content, String name, String localMime)
         {
             var fileMetaData = new Google.Apis.Drive.v3.Data.File()
             {
@@ -207,7 +215,7 @@ namespace FeedForward
 
             FilesResource.CreateMediaUpload request;
 
-            byte[] bytes = Encoding.UTF8.GetBytes(input);
+            byte[] bytes = Encoding.UTF8.GetBytes(content);
 
             Stream stream = new MemoryStream(bytes);
 
