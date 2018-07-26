@@ -43,10 +43,10 @@ namespace NeuralNetworkTrainer
             });
         }
 
-        public static async Task<Boolean> GoogleDriveLogout(String credentialsFile)
+        public static void GoogleDriveLogout(String credentialsFile)
         {
             service = null;
-            return await credential.RevokeTokenAsync(CancellationToken.None);
+            credential.RevokeTokenAsync(CancellationToken.None);
         }
 
         public static IList<Google.Apis.Drive.v3.Data.File> GetFileList()

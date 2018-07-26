@@ -16,6 +16,10 @@ namespace NeuralNetworkTrainer
     {
         public static Model network;
 
+        public static List<float> Loss = new List<float>();
+
+        public static DataKeeper keeper;
+
         public static void CreateNetwork(LayerBase[] layers, String name, String type)
         {
             network = new Model(layers);
@@ -31,35 +35,33 @@ namespace NeuralNetworkTrainer
 
         public static void Train()
         {
-            for(int i = 0; i < DataKeeper.DataSet.Length; i++)
+            for(int i = 0; i < keeper.DataSet.Length; i++)
             {
 
             }
         }
 
-        public static void LoadNetwork(String networkName, String datasetName)
+        public static String LoadNetwork(String name)
         {
-            GoogleDriveHandler.GoogleDriveLogin("credentials.json");
+            String networkId = GoogleDriveHandler.GetFileIdByName(name + "-nn");
 
-            String networkId = GoogleDriveHandler.GetFileIdByName(networkName + "-nn");
-            String datasetId = GoogleDriveHandler.GetFileIdByName(datasetName + "-ds");
+            if (networkId == null) return String.Format("No file found with the name {0}-ds.", name);
 
             String networkContent = GoogleDriveHandler.DownloadGoogleDocument(networkId, "text/plain", Encoding.UTF8);
-            String datasetContent = GoogleDriveHandler.DownloadGoogleDocument(datasetId, "text/plain", Encoding.UTF8);
 
             network = ModelFileHandler.LoadModelFromString(networkContent);
-            DataKeeper.LoadDataSet(datasetContent);
-            DataKeeper.ShuffleDataSet();
+
+            return "Network successfully loaded in.";
         }
     }
 
-    public static class DataKeeper
+    public class DataKeeper
     {
-        public static List<float> Loss = new List<float>();
+        public Data[] DataSet;
 
-        public static Data[] DataSet;
+        public String Name;
 
-        public static void ShuffleDataSet()
+        public void ShuffleDataSet()
         {
             if (DataSet == null) return;
             Random r = new Random();
@@ -74,15 +76,24 @@ namespace NeuralNetworkTrainer
         }
         
 
-        public static void LoadDataSet(String content)
+        public static String LoadDataSet(String name)
         {
-            DataSet = JsonConvert.DeserializeObject<Data[]>(content);
+            String datasetId = GoogleDriveHandler.GetFileIdByName(name + "-ds");
+
+            if (datasetId == null) return String.Format("No file found with the name {0}-ds", name);
+
+            String datasetContent = GoogleDriveHandler.DownloadGoogleDocument(datasetId, "text/plain", Encoding.UTF8);
+
+            NeuralNetworkHandler.keeper = JsonConvert.DeserializeObject<DataKeeper>(datasetContent);
+            NeuralNetworkHandler.keeper.ShuffleDataSet();
+
+            return "Dataset successfully loaded in.";
         }
 
 
 
     }
-
+    
     public class Data
     {
         public Matrix Inputs;

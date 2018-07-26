@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNet.SignalR;
 
-using Dropbox.Api;
-
 using NeuralNetwork.Core;
 using NeuralNetwork.Layers;
 
@@ -78,7 +76,7 @@ namespace NeuralNetworkTrainer.Hubs
                                 }
                                 else
                                 {
-                                    Clients.Caller.terminalError(String.Format("Layer type {0} does not exist", commands[i]));
+                                    Clients.Caller.terminalError(String.Format("Layer type {0} does not exist.", commands[i]));
                                     return;
                                 }
                                 l.nodes = int.Parse(commands[i + 1]);
@@ -88,10 +86,37 @@ namespace NeuralNetworkTrainer.Hubs
                             Clients.Caller.terminalMessage("Neural Network successfully created.");
                             return;
                         }
+                    } else if(commands[1] == "load")
+                    {
+                        Clients.Caller.terminalMessage(NeuralNetworkHandler.LoadNetwork(commands[2]));
                     }
                 } else if (head == "test")
                 {
-                    testDB();
+                    Clients.Caller.terminalError("No test Method implemented.");
+                } else if(head == "dataset")
+                {
+                    if(commands.Length == 1)
+                    {
+                        if (NeuralNetworkHandler.keeper == null) Clients.Caller.terminalMessage("There is no dataset loaded yet.");
+                        else Clients.Caller.terminalMessage(String.Format("The dataset with the name {0} is currently loaded.", NeuralNetworkHandler.keeper.Name));
+                    } else if(commands[1] == "load")
+                    {
+                        Clients.Caller.terminalMessage(DataKeeper.LoadDataSet(commands[2]));
+                    } else if( commands[1] == "unload")
+                    {
+                        NeuralNetworkHandler.keeper = null;
+                    }
+                } else if(head == "googledrive")
+                {
+                    if(commands[1] == "login")
+                    {
+                        GoogleDriveHandler.GoogleDriveLogin("credentials.json");
+                        Clients.Caller.terminalMessage("Successfully logged in on Google Drive.");
+                    } else if (commands[1] == "logout")
+                    {
+                        GoogleDriveHandler.GoogleDriveLogout("credentials.json");
+                        Clients.Caller.terminalMessage("Successfully logged out from Google Drive.");
+                    }
                 }
                 else Clients.Caller.terminalError("That's not a valid command... Type \'help\' if you don\'t know what command to use.");
             } catch (Exception e)
@@ -99,18 +124,6 @@ namespace NeuralNetworkTrainer.Hubs
                 Clients.Caller.terminalError("Command resolved in an error.");
                 Clients.Caller.terminalError(e.Message);
                 Clients.Caller.terminalError(e.StackTrace);
-            }
-        }
-
-        public async Task testDB()
-        {
-            using (var dbx = new DropboxClient("G2U7zVJApnAAAAAAAAAAFQw6Ao_oHX93YlAcyjf_nDNeTzSwkWouzXn8krw1Dd4a"))
-            {
-                using (var response = await dbx.Files.DownloadAsync("test.txt"))
-                {
-                    String resp = await response.GetContentAsStringAsync();
-                    Clients.Caller.terminalMessage(resp);
-                }
             }
         }
     }
