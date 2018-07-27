@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Threading;
+using System.Web;
 
 
 using Google.Apis.Auth.OAuth2;
@@ -30,7 +31,7 @@ namespace NeuralNetworkTrainer
 
             using (var stream = new FileStream(credentialsFile, FileMode.Open, FileAccess.Read))
             {
-                String credPath = "token.json";
+                String credPath = HttpRuntime.AppDomainAppPath + "/token.json";
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(GoogleClientSecrets.Load(stream).Secrets, Scopes, "user", CancellationToken.None, new FileDataStore(credPath, true)).Result;
                 
                 
@@ -175,6 +176,54 @@ namespace NeuralNetworkTrainer
 
             request = service.Files.Create(fileMetaData, stream, localMime);
             request.Fields = "id";
+
+            request.ProgressChanged += (IUploadProgress progress) =>
+            {
+                switch (progress.Status)
+                {
+                    case UploadStatus.Uploading:
+                        {
+                            Console.WriteLine(progress.BytesSent);
+                            break;
+                        }
+                    case UploadStatus.Completed:
+                        {
+                            Console.WriteLine("Upload Complete");
+                            break;
+                        }
+                    case UploadStatus.Failed:
+                        {
+                            Console.WriteLine("Upload Failed");
+
+                            throw progress.Exception;
+                        }
+                }
+            };
+
+            request.Upload();
+
+            var file = request.ResponseBody;
+
+            Console.WriteLine("File ID: " + file.Id);
+        }
+
+        public static void UploadGoogleDocument(String content, String name, String uploadMime, String localMime, String fileId)
+        {
+            var fileMetaData = new Google.Apis.Drive.v3.Data.File()
+            {
+                Name = name,
+                MimeType = uploadMime,
+            };
+
+            FilesResource.UpdateMediaUpload request;
+
+            byte[] bytes = Encoding.UTF8.GetBytes(content);
+
+            Stream stream = new MemoryStream(bytes);
+
+            request = service.Files.Update(fileMetaData, fileId, stream, localMime);
+            request.Fields = "id";
+            
 
             request.ProgressChanged += (IUploadProgress progress) =>
             {

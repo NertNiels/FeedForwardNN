@@ -89,14 +89,20 @@ namespace NeuralNetwork.Core
 
             Random r = new Random();
 
-            for(int i = 0; i < layers.Length; i++)
+            randomizeWeights(r);
+
+            return this;
+        }
+
+        public void randomizeWeights(Random r)
+        {
+            for (int i = 0; i < layers.Length; i++)
             {
                 if (i + 1 == layers.Length) layers[i].initWeights(r);
                 else layers[i].initWeights(r, layers[i + 1]);
             }
-
-            return this;
         }
+
         #endregion
 
     }

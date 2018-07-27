@@ -59,23 +59,10 @@ namespace NeuralNetwork.IO
 
         public static String SaveModelToString(Model model)
         {
-            JsonSerializer serializer = new JsonSerializer();
 
             LayerBase[] layers = model.layers;
 
-            Stream stream = new MemoryStream();
-
-            using (StreamWriter sw = new StreamWriter(stream))
-            {
-                using (JsonWriter jw = new JsonTextWriter(sw))
-                {
-                    serializer.Serialize(jw, layers);
-                    using (StreamReader sr = new StreamReader(stream))
-                    {
-                        return sr.ReadToEnd();
-                    }
-                }
-            }
+            return JsonConvert.SerializeObject(layers);
         }
 
     }

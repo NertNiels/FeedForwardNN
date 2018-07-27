@@ -29,12 +29,13 @@ namespace NeuralNetworkTrainer.Hubs
 
         public void TerminalCommand(String command)
         {
+            Clients.All.terminalMessage(command);
             try
             {
                 command = command.ToLower();
                 if (String.IsNullOrEmpty(command) || String.IsNullOrWhiteSpace(command))
                 {
-                    Clients.Caller.terminalError("That's not a valid command... Type \'help\' if you don\'t know what command to use.");
+                    Clients.All.terminalError("That's not a valid command... Type \'help\' if you don\'t know what command to use.");
                     return;
                 }
                 String[] commands = command.Split(' ');
@@ -47,14 +48,14 @@ namespace NeuralNetworkTrainer.Hubs
                     Model network = NeuralNetworkHandler.network;
                     if (commands.Length == 1)
                     {
-                        if (network == null) Clients.Caller.terminalMessage("There is no Network currently loaded.");
+                        if (network == null) Clients.All.terminalMessage("There is no Network currently loaded.");
                         else
                         {
                             String message =
                                 "Current loaded network:\n" +
                                 "\tName:\t" + network.Name + "\n" +
                                 "\tType:\t" + network.Type;
-                            Clients.Caller.terminalMessage(message);
+                            Clients.All.terminalMessage(message);
                         }
                     }
                     else if (commands[1] == "create")
@@ -76,32 +77,80 @@ namespace NeuralNetworkTrainer.Hubs
                                 }
                                 else
                                 {
-                                    Clients.Caller.terminalError(String.Format("Layer type {0} does not exist.", commands[i]));
+                                    Clients.All.terminalError(String.Format("Layer type {0} does not exist.", commands[i]));
                                     return;
                                 }
                                 l.nodes = int.Parse(commands[i + 1]);
                                 layers.Add(l);
                             }
                             NeuralNetworkHandler.CreateNetwork(layers.ToArray(), commands[2], commands[3]);
-                            Clients.Caller.terminalMessage("Neural Network successfully created.");
+                            Clients.All.terminalMessage("Neural Network successfully created.");
                             return;
                         }
                     } else if(commands[1] == "load")
                     {
-                        Clients.Caller.terminalMessage(NeuralNetworkHandler.LoadNetwork(commands[2]));
+                        Clients.All.terminalMessage(NeuralNetworkHandler.LoadNetwork(commands[2]));
+                    } else if(commands[1] == "save")
+                    {
+                        if(commands.Length == 2) Clients.All.terminalMessage(NeuralNetworkHandler.SaveNetwork());
+                        else Clients.All.terminalMessage(NeuralNetworkHandler.SaveNetwork(commands[2]));
+                    } else if(commands[1] == "randomize")
+                    {
+                        Clients.All.terminalMessage(NeuralNetworkHandler.RandomizeNetwork());
                     }
                 } else if (head == "test")
                 {
-                    Clients.Caller.terminalError("No test Method implemented.");
+
+                    NeuralNetworkHandler.keeper = new DataKeeper();
+                    Data[] data = new Data[2];
+
+                    data[0] = new Data();
+                    data[0].Inputs = new Matrix(5, 1)
+                    {
+                        data = new float[5, 1]
+                        {
+                            { 5 }, { 3 }, { 5 }, { 2 }, { 1 }
+                        }
+                    };
+                    data[0].Targets = new Matrix(5, 1)
+                    {
+                        data = new float[5, 1]
+                                            {
+                            { 5 }, { 3 }, { 5 }, { 2 }, { 1 }
+                                            }
+                    };
+
+                    data[1] = new Data();
+                    data[1].Inputs = new Matrix(5, 1)
+                    {
+                        data = new float[5, 1]
+                        {
+                            { 5 }, { 3 }, { 5 }, { 2 }, { 1 }
+                        }
+                    };
+                    data[1].Targets = new Matrix(5, 1)
+                    {
+                        data = new float[5, 1]
+                                            {
+                            { 5 }, { 3 }, { 5 }, { 2 }, { 1 }
+                                            }
+                    };
+                    NeuralNetworkHandler.keeper.DataSet = data;
+                    NeuralNetworkHandler.keeper.Name = "datasettest";
+
                 } else if(head == "dataset")
                 {
                     if(commands.Length == 1)
                     {
-                        if (NeuralNetworkHandler.keeper == null) Clients.Caller.terminalMessage("There is no dataset loaded yet.");
-                        else Clients.Caller.terminalMessage(String.Format("The dataset with the name {0} is currently loaded.", NeuralNetworkHandler.keeper.Name));
+                        if (NeuralNetworkHandler.keeper == null) Clients.All.terminalMessage("There is no dataset loaded yet.");
+                        else Clients.All.terminalMessage(String.Format("The dataset with the name {0} is currently loaded.", NeuralNetworkHandler.keeper.Name));
                     } else if(commands[1] == "load")
                     {
-                        Clients.Caller.terminalMessage(DataKeeper.LoadDataSet(commands[2]));
+                        Clients.All.terminalMessage(DataKeeper.LoadDataSet(commands[2]));
+                    } else if (commands[1] == "save")
+                    {
+                        if (commands.Length == 2) Clients.All.terminalMessage(DataKeeper.SaveDataSet());
+                        else Clients.All.terminalMessage(DataKeeper.SaveDataSet(commands[2]));
                     } else if( commands[1] == "unload")
                     {
                         NeuralNetworkHandler.keeper = null;
@@ -110,20 +159,28 @@ namespace NeuralNetworkTrainer.Hubs
                 {
                     if(commands[1] == "login")
                     {
-                        GoogleDriveHandler.GoogleDriveLogin("credentials.json");
-                        Clients.Caller.terminalMessage("Successfully logged in on Google Drive.");
+                        GoogleDriveHandler.GoogleDriveLogin(HttpRuntime.AppDomainAppPath + "/credentials.json");
+                        Clients.All.terminalMessage("Successfully logged in on Google Drive.");
                     } else if (commands[1] == "logout")
                     {
                         GoogleDriveHandler.GoogleDriveLogout("credentials.json");
-                        Clients.Caller.terminalMessage("Successfully logged out from Google Drive.");
+                        Clients.All.terminalMessage("Successfully logged out from Google Drive.");
+                    } else if (commands[1] == "list")
+                    {
+                        IList<Google.Apis.Drive.v3.Data.File> list = GoogleDriveHandler.GetFileList();
+
+                        foreach (var file in list)
+                        {
+                            Clients.All.terminalMessage(String.Format("{0} ({1})", file.Name, file.Id));
+                        }
                     }
                 }
-                else Clients.Caller.terminalError("That's not a valid command... Type \'help\' if you don\'t know what command to use.");
+                else Clients.All.terminalError("That's not a valid command... Type \'help\' if you don\'t know what command to use.");
             } catch (Exception e)
             {
-                Clients.Caller.terminalError("Command resolved in an error.");
-                Clients.Caller.terminalError(e.Message);
-                Clients.Caller.terminalError(e.StackTrace);
+                Clients.All.terminalError("Command resolved in an error.");
+                Clients.All.terminalError(e.Message);
+                Clients.All.terminalError(e.StackTrace);
             }
         }
     }

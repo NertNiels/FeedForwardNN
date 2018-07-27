@@ -45,13 +45,47 @@ namespace NeuralNetworkTrainer
         {
             String networkId = GoogleDriveHandler.GetFileIdByName(name + "-nn");
 
-            if (networkId == null) return String.Format("No file found with the name {0}-ds.", name);
+            if (String.IsNullOrEmpty(networkId)) return String.Format("No file found with the name {0}-nn.", name);
 
             String networkContent = GoogleDriveHandler.DownloadGoogleDocument(networkId, "text/plain", Encoding.UTF8);
 
             network = ModelFileHandler.LoadModelFromString(networkContent);
+            network.Name = name;
 
             return "Network successfully loaded in.";
+        }
+
+        public static String SaveNetwork()
+        {
+            String content = ModelFileHandler.SaveModelToString(network);
+
+            String fileId = GoogleDriveHandler.GetFileIdByName(network.Name + "-nn");
+            if (fileId == null) GoogleDriveHandler.UploadGoogleDocument(content, network.Name + "-nn", "application/vnd.google-apps.file", "text/plain");
+            else GoogleDriveHandler.UploadGoogleDocument(content, network.Name + "-nn", "application/vnd.google-apps.file", "text/plain", fileId);
+
+            return String.Format("Successfully saved the network to {0}-nn", network.Name);
+        }
+
+        public static String SaveNetwork(String name)
+        {
+            String content = ModelFileHandler.SaveModelToString(network);
+
+            String fileId = GoogleDriveHandler.GetFileIdByName(name + "-nn");
+            if(fileId == null) GoogleDriveHandler.UploadGoogleDocument(content, name + "-nn", "application/vnd.google-apps.file", "text/plain");
+            else GoogleDriveHandler.UploadGoogleDocument(content, name + "-nn", "application/vnd.google-apps.file", "text/plain", fileId);
+
+            return String.Format("Successfully saved the network to {0}-nn", network.Name);
+        }
+
+        public static String RandomizeNetwork()
+        {
+            if (network == null) return "No network loaded";
+
+            Random r = new Random();
+
+            network.randomizeWeights(r);
+
+            return "Weights randomized";
         }
     }
 
@@ -88,6 +122,29 @@ namespace NeuralNetworkTrainer
             NeuralNetworkHandler.keeper.ShuffleDataSet();
 
             return "Dataset successfully loaded in.";
+        }
+
+        public static String SaveDataSet()
+        {
+            String content = JsonConvert.SerializeObject(NeuralNetworkHandler.keeper);
+
+            String fileId = GoogleDriveHandler.GetFileIdByName(NeuralNetworkHandler.keeper.Name);
+            if (fileId == null) GoogleDriveHandler.UploadGoogleDocument(content, NeuralNetworkHandler.keeper.Name + "-ds", "application/vnd.google-apps.file", "text/plain");
+            else GoogleDriveHandler.UploadGoogleDocument(content, NeuralNetworkHandler.keeper.Name + "-ds", "application/vnd.google-apps.file", "text/plain", fileId);
+
+            return String.Format("Successfully saved the dataset to {0}-ds", NeuralNetworkHandler.keeper.Name);
+        }
+
+        public static String SaveDataSet(String name)
+        {
+            String content = JsonConvert.SerializeObject(NeuralNetworkHandler.keeper);
+            NeuralNetworkHandler.keeper.Name = name;
+
+            String fileId = GoogleDriveHandler.GetFileIdByName(name);
+            if (fileId == null) GoogleDriveHandler.UploadGoogleDocument(content, name + "-ds", "application/vnd.google-apps.file", "text/plain");
+            else GoogleDriveHandler.UploadGoogleDocument(content, name + "-ds", "application/vnd.google-apps.file", "text/plain", fileId);
+
+            return String.Format("Successfully saved the dataset to {0}-ds", name);
         }
 
 

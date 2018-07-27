@@ -38,12 +38,6 @@
     <script>
         function enterCommand(com) {
             if (event.key == 'Enter') {
-                var term = document.getElementById("terminal");
-                var entry = document.createElement('li');
-                entry.appendChild(document.createTextNode(com.value));
-
-
-                term.appendChild(entry);
 
                 sendTerminalCommand(com.value);
 
