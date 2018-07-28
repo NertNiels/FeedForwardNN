@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Web;
+using System.Threading;
 
 using Newtonsoft.Json;
 
 using NeuralNetwork.Core;
 using NeuralNetwork.IO;
 using NeuralNetwork.Layers;
+
+using NeuralNetworkTrainer.Hubs;
 
 namespace NeuralNetworkTrainer
 {
@@ -19,6 +22,9 @@ namespace NeuralNetworkTrainer
         public static List<float> Loss = new List<float>();
 
         public static DataKeeper keeper;
+
+        public static Boolean isTraining = false;
+        public static Thread train;
 
         public static void CreateNetwork(LayerBase[] layers, String name, String type)
         {
@@ -33,16 +39,43 @@ namespace NeuralNetworkTrainer
             return network.layers;
         }
 
-        public static void Train()
+        public static void TrainNetwork()
         {
+            isTraining = true;
+
+            Loss = new List<float>();
+
+            int timer = 0;
+
             for(int i = 0; i < keeper.DataSet.Length; i++)
             {
+                Matrix output = network.FeedForward(keeper.DataSet[i].Inputs);
+                network.Backpropagate(output, keeper.DataSet[i].Targets);
 
+                Matrix errors = network.layers.Last().errors;
+                float MSE = Activation.MeanSquaredError(errors);
+
+                Loss.Add(MSE);
+
+                timer++;
+                if(timer >= 1000)
+                {
+                    SaveNetwork(network.Name + "_autosave");
+                    timer = 0;
+                }
             }
+
+            SaveNetwork(network.Name + "_autosave");
+
+            isTraining = false;
+            DataHub.dTraining();
+            
         }
 
         public static String LoadNetwork(String name)
         {
+            if (isTraining) return "You can't load a network when there already is one training.";
+
             String networkId = GoogleDriveHandler.GetFileIdByName(name + "-nn");
 
             if (String.IsNullOrEmpty(networkId)) return String.Format("No file found with the name {0}-nn.", name);
@@ -79,6 +112,8 @@ namespace NeuralNetworkTrainer
 
         public static String RandomizeNetwork()
         {
+            if (isTraining) return "You can't randomize a network when there already is one training.";
+
             if (network == null) return "No network loaded";
 
             Random r = new Random();
@@ -112,6 +147,9 @@ namespace NeuralNetworkTrainer
 
         public static String LoadDataSet(String name)
         {
+            if (NeuralNetworkHandler.isTraining) return "You can't load a dataset when there is a network training.";
+
+
             String datasetId = GoogleDriveHandler.GetFileIdByName(name + "-ds");
 
             if (datasetId == null) return String.Format("No file found with the name {0}-ds", name);
@@ -146,9 +184,6 @@ namespace NeuralNetworkTrainer
 
             return String.Format("Successfully saved the dataset to {0}-ds", name);
         }
-
-
-
     }
     
     public class Data

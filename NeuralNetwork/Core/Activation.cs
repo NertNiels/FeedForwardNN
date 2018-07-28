@@ -100,5 +100,12 @@ namespace NeuralNetwork.Core
             return output;
         }
 
+        public static float MeanSquaredError(Matrix errors)
+        {
+            float f = 1 / (errors.rows * errors.cols);
+            float errorSum = errors.sum();
+
+            return f * errorSum;
+        }
     }
 }

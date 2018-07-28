@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.AspNet.SignalR;
@@ -14,6 +15,8 @@ namespace NeuralNetworkTrainer.Hubs
 {
     public class DataHub : Hub
     {
+
+        public static Func<Boolean> dTraining;
         
         public void GetNetworkInformation()
         {
@@ -25,6 +28,17 @@ namespace NeuralNetworkTrainer.Hubs
             }
 
             Clients.Caller.setNetworkInformation(network.Name, network.Type, "No Discription Available", true);
+        }
+
+        public void GetNewTrainingLoss(int currentNumberOfLoss)
+        {
+            float[] loss = NeuralNetworkHandler.Loss.ToArray();
+            if (loss == null || loss.Length - currentNumberOfLoss <= 0) Clients.Caller.giveNewTrainingLoss(null);
+
+            float[] newLoss = new float[loss.Length - currentNumberOfLoss];
+            Array.Copy(loss, loss.Length - (loss.Length - currentNumberOfLoss) - 1, newLoss, 0, loss.Length - currentNumberOfLoss);
+
+            Clients.Caller.giveNewTrainingLoss(null);
         }
 
         public void TerminalCommand(String command)
@@ -97,47 +111,37 @@ namespace NeuralNetworkTrainer.Hubs
                     } else if(commands[1] == "randomize")
                     {
                         Clients.All.terminalMessage(NeuralNetworkHandler.RandomizeNetwork());
+                    } else if(commands[1] == "train")
+                    {
+                        if (network == null) Clients.All.terminalMessage("No network loaded.");
+                        if (NeuralNetworkHandler.keeper == null) Clients.All.terminalMessage("No dataset loaded.");
+
+                        NeuralNetworkHandler.train = new Thread(NeuralNetworkHandler.TrainNetwork);
+                        NeuralNetworkHandler.train.IsBackground = true;
+                        NeuralNetworkHandler.train.Name = "Training Thread";
+
+                        dTraining = doneTraining;
+
+                        NeuralNetworkHandler.train.Start();
                     }
                 } else if (head == "test")
                 {
 
                     NeuralNetworkHandler.keeper = new DataKeeper();
-                    Data[] data = new Data[2];
+                    Data[] data = new Data[7200];
 
-                    data[0] = new Data();
-                    data[0].Inputs = new Matrix(5, 1)
-                    {
-                        data = new float[5, 1]
-                        {
-                            { 5 }, { 3 }, { 5 }, { 2 }, { 1 }
-                        }
-                    };
-                    data[0].Targets = new Matrix(5, 1)
-                    {
-                        data = new float[5, 1]
-                                            {
-                            { 5 }, { 3 }, { 5 }, { 2 }, { 1 }
-                                            }
-                    };
+                    float x = -360;
 
-                    data[1] = new Data();
-                    data[1].Inputs = new Matrix(5, 1)
+                    for(int i = 0; i < 7200; i++)
                     {
-                        data = new float[5, 1]
-                        {
-                            { 5 }, { 3 }, { 5 }, { 2 }, { 1 }
-                        }
-                    };
-                    data[1].Targets = new Matrix(5, 1)
-                    {
-                        data = new float[5, 1]
-                                            {
-                            { 5 }, { 3 }, { 5 }, { 2 }, { 1 }
-                                            }
-                    };
+                        data[i] = new Data();
+                        data[i].Inputs = new Matrix(1, 1) { data = new float[1, 1] { { x } } };
+                        data[i].Targets = new Matrix(1, 1) { data = new float[1, 1] { { (float) Math.Sin((x * Math.PI) / 180) } } };
+                        x +=  (float)0.1;
+                    }
                     NeuralNetworkHandler.keeper.DataSet = data;
-                    NeuralNetworkHandler.keeper.Name = "datasettest";
 
+                    Clients.All.terminalMessage("Done with creating the dataset.");
                 } else if(head == "dataset")
                 {
                     if(commands.Length == 1)
@@ -174,6 +178,8 @@ namespace NeuralNetworkTrainer.Hubs
                             Clients.All.terminalMessage(String.Format("{0} ({1})", file.Name, file.Id));
                         }
                     }
+
+                    
                 }
                 else Clients.All.terminalError("That's not a valid command... Type \'help\' if you don\'t know what command to use.");
             } catch (Exception e)
@@ -182,6 +188,12 @@ namespace NeuralNetworkTrainer.Hubs
                 Clients.All.terminalError(e.Message);
                 Clients.All.terminalError(e.StackTrace);
             }
+        }
+
+        public Boolean doneTraining()
+        {
+            Clients.All.terminalMessage("Training is done");
+            return true;
         }
     }
 }

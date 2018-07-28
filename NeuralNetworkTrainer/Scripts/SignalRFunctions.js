@@ -45,6 +45,10 @@ $(function () {
         }
     }
 
+    hub.client.giveNewTrainingLoss = function (newLoss) {
+        lossChart.data.labels.
+    }
+
     $.connection.hub.start().done(function () {
         hub.server.getNetworkInformation();
     });
@@ -53,4 +57,8 @@ $(function () {
 
 function sendTerminalCommand(command) {
     hub.server.terminalCommand(command);
+}
+
+function askLossData(currentTrainingIndex) {
+    hub.server.getNewTrainingLoss(currentTrainingIndex);
 }
