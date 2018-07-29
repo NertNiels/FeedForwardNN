@@ -47,8 +47,7 @@ $(function () {
 
     hub.client.giveNewTrainingLoss = function (newLoss) {
         var length = lossChart.data.datasets[0].data.length;
-
-        int i;
+        var i;
         for (i = 0; i < newLoss.length; i++) {
             var data = {
                 x: length + i,
