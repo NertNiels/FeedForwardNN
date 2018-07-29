@@ -36,24 +36,16 @@
     <script>
         var ctx = document.getElementById("loss").getContext('2d');
 
-        var labels = new Array(10000);
-        var data = new Array(10000);
-        var i;
-        for (i = 0; i < labels.length; i++) {
-            labels[i] = i + 1;
-            data[i] = Math.pow(i, 1.5);
-        }
+        
 
         lossChart = new Chart(ctx, {
 
             type: 'line',
 
             data: {
-                labels: labels,
-
+                labels: 'Equation Plotted',
                 datasets: [{
                     label: "Neural Network Loss",
-                    data: data,
                     pointRadius: 0,
                     backgroundColor: ['rgba(0, 0, 255, 0.1)'],
                     borderColor:'blue'
@@ -65,10 +57,22 @@
                     fontColor: 'black',
                     display: true,
                     text: "Neural Network Statistics"
+                },
+                scales: {
+                    xAxes: [{
+                        type: 'linear',
+                        position:'bottom',
+                        ticks: {
+                            min: 0,
+                            stepSize: 1
+                        }
+                    }]
                 }
             }
 
         });
+
+        askLossData();
         
     </script>
 

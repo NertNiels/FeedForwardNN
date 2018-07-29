@@ -15,6 +15,7 @@ namespace NeuralNetwork.Core
         public static float LearningRate = 0.01f;
 
         public String Name;
+        public String Description;
         public String Type;
 
         public Model() { }

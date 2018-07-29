@@ -60,6 +60,7 @@ namespace NeuralNetworkTrainer
                 timer++;
                 if(timer >= 1000)
                 {
+                    network.Description = "Network's autosave on training iteration: " + i;
                     SaveNetwork(network.Name + "_autosave");
                     timer = 0;
                 }

@@ -46,7 +46,18 @@ $(function () {
     }
 
     hub.client.giveNewTrainingLoss = function (newLoss) {
-        lossChart.data.labels.
+        var length = lossChart.data.datasets[0].data.length;
+
+        int i;
+        for (i = 0; i < newLoss.length; i++) {
+            var data = {
+                x: length + i,
+                y: newLoss[i]
+            }
+            lossChart.data.datasets[0].data.push(data);
+
+        }
+        lossChart.update(); setTimeout(askLossData, 2000);
     }
 
     $.connection.hub.start().done(function () {
@@ -59,6 +70,6 @@ function sendTerminalCommand(command) {
     hub.server.terminalCommand(command);
 }
 
-function askLossData(currentTrainingIndex) {
-    hub.server.getNewTrainingLoss(currentTrainingIndex);
+function askLossData() {
+    hub.server.getNewTrainingLoss(lossChart.data.datasets[0].data.length);
 }

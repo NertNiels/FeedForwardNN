@@ -32,6 +32,10 @@ namespace NeuralNetworkTrainer.Hubs
 
         public void GetNewTrainingLoss(int currentNumberOfLoss)
         {
+            NeuralNetworkHandler.Loss.Add(4f);
+            NeuralNetworkHandler.Loss.Add(5f);
+
+
             float[] loss = NeuralNetworkHandler.Loss.ToArray();
             if (loss == null || loss.Length - currentNumberOfLoss <= 0) Clients.Caller.giveNewTrainingLoss(null);
 
