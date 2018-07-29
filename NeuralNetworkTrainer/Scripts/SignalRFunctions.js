@@ -56,7 +56,8 @@ $(function () {
             lossChart.data.datasets[0].data.push(data);
 
         }
-        lossChart.update(); setTimeout(askLossData, 2000);
+        lossChart.update();
+        setTimeout(askLossData, 2000);
     }
 
     $.connection.hub.start().done(function () {
@@ -66,9 +67,10 @@ $(function () {
 });
 
 function sendTerminalCommand(command) {
-    hub.server.terminalCommand(command);
+    if (hub != null) hub.server.terminalCommand(command);
 }
 
 function askLossData() {
-    hub.server.getNewTrainingLoss(lossChart.data.datasets[0].data.length);
+    if (hub != null) hub.server.getNewTrainingLoss(lossChart.data.datasets[0].data.length);
+    setTimeout(askLossData, 2000);
 }
