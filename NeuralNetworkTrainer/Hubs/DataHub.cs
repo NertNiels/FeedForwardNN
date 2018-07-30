@@ -148,14 +148,14 @@ namespace NeuralNetworkTrainer.Hubs
                     NeuralNetworkHandler.keeper = new DataKeeper();
                     Data[] data = new Data[7200];
 
-                    float x = -360;
+                    float x = 0;
 
-                    for(int i = 0; i < 7200; i++)
+                    for(int i = 0; i < 6000; i++)
                     {
                         data[i] = new Data();
                         data[i].Inputs = new Matrix(1, 1) { data = new float[1, 1] { { x } } };
-                        data[i].Targets = new Matrix(1, 1) { data = new float[1, 1] { { (float) Math.Sin((x * Math.PI) / 180) } } };
-                        x +=  (float)0.1;
+                        data[i].Targets = new Matrix(1, 1) { data = new float[1, 1] { { (float) Math.Sin(x) } } };
+                        x +=  (float)0.001;
                     }
                     NeuralNetworkHandler.keeper.DataSet = data;
 

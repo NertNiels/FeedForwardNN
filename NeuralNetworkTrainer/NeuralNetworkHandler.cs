@@ -47,23 +47,25 @@ namespace NeuralNetworkTrainer
 
             int timer = 0;
 
-            for(int e = 0; e < epochs; e++)
-            for(int i = 0; i < keeper.DataSet.Length; i++)
+            for (int e = 0; e < epochs; e++)
             {
-                Matrix output = network.FeedForward(keeper.DataSet[i].Inputs);
-                network.Backpropagate(output, keeper.DataSet[i].Targets);
-
-                Matrix errors = network.layers.Last().errors;
-                float MSE = Activation.MeanSquaredError(errors);
-
-                Loss.Add(MSE);
-
-                timer++;
-                if(timer >= 1000)
+                for (int i = 0; i < keeper.DataSet.Length; i++)
                 {
-                    network.Description = "Network's autosave on training iteration: " + i;
-                    SaveNetwork(network.Name + "_autosave");
-                    timer = 0;
+                    Matrix output = network.FeedForward(keeper.DataSet[i].Inputs);
+                    network.Backpropagate(output, keeper.DataSet[i].Targets);
+
+                    Matrix errors = network.layers.Last().errors;
+                    float MSE = Activation.MeanSquaredError(errors);
+
+                    Loss.Add(MSE);
+
+                    timer++;
+                    if (timer >= 1000)
+                    {
+                        network.Description = "Network's autosave on training iteration: " + i;
+                        SaveNetwork(network.Name + "_autosave");
+                        timer = 0;
+                    }
                 }
             }
 
