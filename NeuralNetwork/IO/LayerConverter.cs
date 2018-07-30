@@ -30,6 +30,8 @@ namespace NeuralNetwork.IO
                     return jo.ToObject<InputLayer>(serializer);
                 case LayerType.LeakyRelu:
                     return jo.ToObject<LeakyReluLayer>(serializer);
+                case LayerType.Sigmoid:
+                    return jo.ToObject<SigmoidLayer>(serializer);
                 default:
                     return null;
             }

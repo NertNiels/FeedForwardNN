@@ -16,6 +16,7 @@ namespace NeuralNetwork.Layers
         
 
         public int nodes;
+        public float dropout = 0f;
 
         public Matrix values;
         public Matrix weights;
@@ -35,6 +36,7 @@ namespace NeuralNetwork.Layers
     public enum LayerType
     {
         Input,
-        LeakyRelu
+        LeakyRelu,
+        Sigmoid
     }
 }

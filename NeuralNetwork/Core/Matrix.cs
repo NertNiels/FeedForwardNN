@@ -35,7 +35,7 @@ namespace NeuralNetwork.Core
             {
                 for (int j = 0; j < cols; j++)
                 {
-                    float f = (float)r.NextDouble();
+                    float f = (float)r.NextDouble() * 2 - 1;
                     data[i, j] = f;
                 }
             }

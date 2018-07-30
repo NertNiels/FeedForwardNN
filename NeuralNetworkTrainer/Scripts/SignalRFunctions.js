@@ -46,12 +46,19 @@ $(function () {
     }
 
     hub.client.giveNewTrainingLoss = function (newLoss) {
+        if (newLoss == null) {
+            setTimeout(askLossData, 2000);
+            return;
+        }
+        
         var length = lossChart.data.datasets[0].data.length;
         var i;
         for (i = 0; i < newLoss.length; i++) {
+            var y = newLoss[i];
+            if (isNaN(y)) y = -1;
             var data = {
                 x: length + i,
-                y: newLoss[i]
+                y: y
             }
             lossChart.data.datasets[0].data.push(data);
 
@@ -72,5 +79,5 @@ function sendTerminalCommand(command) {
 
 function askLossData() {
     if (hub != null) hub.server.getNewTrainingLoss(lossChart.data.datasets[0].data.length);
-    setTimeout(askLossData, 2000);
+    else setTimeout(askLossData, 2000);
 }

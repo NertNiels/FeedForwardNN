@@ -8,19 +8,18 @@ using NeuralNetwork.Core;
 
 namespace NeuralNetwork.Layers
 {
-    public class LeakyReluLayer : LayerBase
+    public class SigmoidLayer : LayerBase
     {
-
-        public LeakyReluLayer()
+        public SigmoidLayer()
         {
-            this.layerType = LayerType.LeakyRelu;
+            this.layerType = LayerType.Sigmoid;
         }
-        
+
         public override void FeedForward(LayerBase input)
         {
             this.values = Matrix.multiply(input.weights, input.values);
             this.values.add(this.bias);
-            this.values.map(Activation.lrelu);
+            this.values.map(Activation.sigmoid);
 
             if (dropout != 0f)
             {
@@ -32,13 +31,13 @@ namespace NeuralNetwork.Layers
             }
         }
 
-        public override void Backpropagate(LayerBase input,  Matrix errors)
+        public override void Backpropagate(LayerBase input, Matrix errors)
         {
             // Calculating Errors
             this.errors = errors;
 
             // Calculating Gradients
-            Matrix gradients = Matrix.map(Activation.dlrelu, this.values);
+            Matrix gradients = Matrix.map(Activation.dsigmoidY, this.values);
             gradients.hadamard(this.errors);
             gradients.multiply(Model.LearningRate);
 
@@ -59,7 +58,7 @@ namespace NeuralNetwork.Layers
             this.errors = Matrix.multiply(weights_T, output.errors);
 
             // Calculating Gradients
-            Matrix gradients = Matrix.map(Activation.dlrelu, this.values);
+            Matrix gradients = Matrix.map(Activation.dsigmoidY, this.values);
             gradients.hadamard(this.errors);
             gradients.multiply(Model.LearningRate);
 
@@ -86,6 +85,5 @@ namespace NeuralNetwork.Layers
             this.bias = new Matrix(this.nodes, 1);
             this.bias.randomize(r);
         }
-
     }
 }

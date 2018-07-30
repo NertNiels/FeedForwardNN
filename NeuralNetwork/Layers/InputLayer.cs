@@ -16,7 +16,14 @@ namespace NeuralNetwork.Layers
 
         public override void FeedForward(LayerBase input)
         {
-            
+            if (dropout != 0f)
+            {
+                Random r = new Random();
+                for(int i = 0; i < nodes; i++)
+                {
+                    if (r.NextDouble() < dropout) values.data[i, 0] = 0f;
+                }
+            }
         }
 
         public override void Backpropagate(LayerBase input, Matrix errors)

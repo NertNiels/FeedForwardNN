@@ -39,7 +39,7 @@ namespace NeuralNetworkTrainer
             return network.layers;
         }
 
-        public static void TrainNetwork()
+        public static void TrainNetwork(int epochs)
         {
             isTraining = true;
 
@@ -47,6 +47,7 @@ namespace NeuralNetworkTrainer
 
             int timer = 0;
 
+            for(int e = 0; e < epochs; e++)
             for(int i = 0; i < keeper.DataSet.Length; i++)
             {
                 Matrix output = network.FeedForward(keeper.DataSet[i].Inputs);

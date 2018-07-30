@@ -13,53 +13,84 @@ namespace FeedForward
     class Program
     {
 
-        public static Matrix targets = new Matrix(2, 1);
+        public static Matrix[] targets = new Matrix[4];
 
-        public static float LearningRate = 0.01f;
+        public static float LearningRate = 0.001f;
 
         static void Main(string[] args)
         {
-            try
+            while (true)
             {
-                String path = @"C:\Users\drumm\Desktop\NeuralNetwork\jsonFile.json";
-
-                targets.data = new float[,] { { 0.0313f }, { 2.324f } };
-
-                //Model nn = ModelFileHandler.LoadModel(path);
-
-                Model nn = Model.createModel().
-                    inputLayer(2).
-                    leakyReluLayer(2).
-                    leakyReluLayer(2).
-                    endModel();
-
-
-
-
-                Matrix input = new Matrix(2, 1);
-                input.data = new float[,] { { 2 }, { 1 } };
-                for (int i = 0; i < 10; i++)
+                try
                 {
-                    Matrix.table(input);
+                    String path = @"C:\Users\drumm\Desktop\NeuralNetwork\jsonFile.json";
 
-                    Matrix output = nn.FeedForward(input);
-                    Matrix.table(output);
+                    targets[0] = new Matrix(1, 1);
+                    targets[0].data = new float[,] { { 0 } };
+                    targets[1] = new Matrix(1, 1);
+                    targets[1].data = new float[,] { { 0 } };
+                    targets[2] = new Matrix(1, 1);
+                    targets[2].data = new float[,] { { 1 } };
+                    targets[3] = new Matrix(1, 1);
+                    targets[3].data = new float[,] { { 1 } };
 
-                    nn.Backpropagate(output, targets);
 
-                    Matrix.table(targets);
+
+                    //Model nn = ModelFileHandler.LoadModel(path);
+
+
+
+                    Model nn = Model.createModel().
+                        inputLayer(2, 0f).
+                        leakyReluLayer(2, 0f).
+                        leakyReluLayer(1, 0f).
+                        endModel();
+
+
+
+
+                    Matrix[] inputs = new Matrix[4];
+
+                    inputs[0] = new Matrix(2, 1);
+                    inputs[0].data = new float[,] { { 0 }, { 0 } };
+                    inputs[1] = new Matrix(2, 1);
+                    inputs[1].data = new float[,] { { 1 }, { 1 } };
+                    inputs[2] = new Matrix(2, 1);
+                    inputs[2].data = new float[,] { { 1 }, { 0 } };
+                    inputs[3] = new Matrix(2, 1);
+                    inputs[3].data = new float[,] { { 0 }, { 1 } };
+
+                    Random r = new Random();
+                    for (int i = 0; i < 2000; i++)
+                    {
+                        int index = (int)Math.Round(r.NextDouble() * 3);
+
+                        Console.WriteLine("=======================================");
+                        Console.WriteLine("Iteration " + (i + 1) + "\n");
+                        Console.WriteLine("Input:");
+                        Matrix.table(inputs[index]);
+
+                        Matrix output = nn.FeedForward(inputs[index]);
+                        Console.WriteLine("Output:");
+                        Matrix.table(output);
+
+                        nn.Backpropagate(output, targets[index]);
+
+                        Console.WriteLine("Targets:");
+                        Matrix.table(targets[index]);
+                    }
+
+
+                }
+                catch (Exception e)
+                {
+                    writeErrorStackTrace(e.Message, e.StackTrace);
                 }
 
 
-                ModelFileHandler.SaveModel(path, nn);
-            } catch (Exception e)
-            {
-                writeErrorStackTrace(e.Message, e.StackTrace);
+                Console.Read();
+                Console.Clear();
             }
-
-            GoogleDriveHandler.DriveTest();
-
-            Console.Read();
         }
         
 

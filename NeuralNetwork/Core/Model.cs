@@ -64,21 +64,23 @@ namespace NeuralNetwork.Core
             return model;
         }
 
-        public Model inputLayer(int nodes)
+        public Model inputLayer(int nodes, float dropout)
         {
             initLayers = new List<LayerBase>();
 
             InputLayer layer = new InputLayer();
             layer.nodes = nodes;
+            layer.dropout = dropout;
 
             initLayers.Add(layer);
             return this;
         }
 
-        public Model leakyReluLayer(int nodes)
+        public Model leakyReluLayer(int nodes, float dropout)
         {
             LeakyReluLayer layer = new LeakyReluLayer();
             layer.nodes = nodes;
+            layer.dropout = dropout;
 
             initLayers.Add(layer);
             return this;

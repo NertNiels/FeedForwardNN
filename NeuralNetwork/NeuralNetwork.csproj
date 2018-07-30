@@ -52,6 +52,7 @@
     <Compile Include="Layers\InputLayer.cs" />
     <Compile Include="Layers\LayerBase.cs" />
     <Compile Include="Layers\LeakyReluLayer.cs" />
+    <Compile Include="Layers\SigmoidLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -32,17 +32,13 @@ namespace NeuralNetworkTrainer.Hubs
 
         public void GetNewTrainingLoss(int currentNumberOfLoss)
         {
-            NeuralNetworkHandler.Loss.Add(4f);
-            NeuralNetworkHandler.Loss.Add(5f);
-
-
             float[] loss = NeuralNetworkHandler.Loss.ToArray();
             if (loss == null || loss.Length - currentNumberOfLoss <= 0) Clients.Caller.giveNewTrainingLoss(null);
 
             float[] newLoss = new float[loss.Length - currentNumberOfLoss];
-            Array.Copy(loss, loss.Length - (loss.Length - currentNumberOfLoss) - 1, newLoss, 0, loss.Length - currentNumberOfLoss);
+            Array.Copy(loss, loss.Length - (loss.Length - currentNumberOfLoss), newLoss, 0, loss.Length - currentNumberOfLoss);
 
-            Clients.Caller.giveNewTrainingLoss(null);
+            Clients.Caller.giveNewTrainingLoss(newLoss);
         }
 
         public void TerminalCommand(String command)
@@ -93,6 +89,10 @@ namespace NeuralNetworkTrainer.Hubs
                                 {
                                     l = new LeakyReluLayer();
                                 }
+                                else if (commands[i] == "sigmoid")
+                                {
+                                    l = new SigmoidLayer();
+                                }
                                 else
                                 {
                                     Clients.All.terminalError(String.Format("Layer type {0} does not exist.", commands[i]));
@@ -117,16 +117,30 @@ namespace NeuralNetworkTrainer.Hubs
                         Clients.All.terminalMessage(NeuralNetworkHandler.RandomizeNetwork());
                     } else if(commands[1] == "train")
                     {
-                        if (network == null) Clients.All.terminalMessage("No network loaded.");
-                        if (NeuralNetworkHandler.keeper == null) Clients.All.terminalMessage("No dataset loaded.");
+                        if (network == null)
+                        {
+                            Clients.All.terminalMessage("No network loaded.");
+                            return;
+                        }
+                        if (NeuralNetworkHandler.keeper == null)
+                        {
+                            Clients.All.terminalMessage("No dataset loaded.");
+                            return;
+                        }
 
-                        NeuralNetworkHandler.train = new Thread(NeuralNetworkHandler.TrainNetwork);
+                        int epochs = 1;
+                        if (commands.Length != 2) epochs = int.Parse(commands[2]);
+                        NeuralNetworkHandler.train = new Thread(() => NeuralNetworkHandler.TrainNetwork(epochs));
                         NeuralNetworkHandler.train.IsBackground = true;
                         NeuralNetworkHandler.train.Name = "Training Thread";
 
                         dTraining = doneTraining;
 
                         NeuralNetworkHandler.train.Start();
+                    } else if(commands[1] == "learningrate")
+                    {
+                        if (commands.Length == 2) Clients.All.terminalMessage("Learning rate: " + Model.LearningRate);
+                        else Model.LearningRate = float.Parse(commands[2]);
                     }
                 } else if (head == "test")
                 {
