@@ -33,7 +33,11 @@ namespace NeuralNetworkTrainer.Hubs
         public void GetNewTrainingLoss(int currentNumberOfLoss)
         {
             float[] loss = NeuralNetworkHandler.Loss.ToArray();
-            if (loss == null || loss.Length - currentNumberOfLoss <= 0) Clients.Caller.giveNewTrainingLoss(null);
+            if (loss == null || loss.Length - currentNumberOfLoss <= 0)
+            {
+                Clients.Caller.giveNewTrainingLoss(null);
+                return;
+            }
 
             float[] newLoss = new float[loss.Length - currentNumberOfLoss];
             Array.Copy(loss, loss.Length - (loss.Length - currentNumberOfLoss), newLoss, 0, loss.Length - currentNumberOfLoss);
@@ -146,14 +150,14 @@ namespace NeuralNetworkTrainer.Hubs
                 {
 
                     NeuralNetworkHandler.keeper = new DataKeeper();
-                    Data[] data = new Data[7200];
+                    Data[] data = new Data[6000];
 
                     float x = 0;
 
                     for(int i = 0; i < 6000; i++)
                     {
                         data[i] = new Data();
-                        data[i].Inputs = new Matrix(1, 1) { data = new float[1, 1] { { x } } };
+                        data[i].Inputs = new Matrix(1, 1) { data = new float[1, 1] { { (float)(x/(Math.PI * 2.0)) } } };
                         data[i].Targets = new Matrix(1, 1) { data = new float[1, 1] { { (float) Math.Sin(x) } } };
                         x +=  (float)0.001;
                     }
@@ -173,9 +177,25 @@ namespace NeuralNetworkTrainer.Hubs
                     {
                         if (commands.Length == 2) Clients.All.terminalMessage(DataKeeper.SaveDataSet());
                         else Clients.All.terminalMessage(DataKeeper.SaveDataSet(commands[2]));
-                    } else if( commands[1] == "unload")
+                    } else if(commands[1] == "unload")
                     {
                         NeuralNetworkHandler.keeper = null;
+                    } else if (commands[1] == "view")
+                    {
+                        if(NeuralNetworkHandler.keeper == null)
+                        {
+                            Clients.All.terminalMessage("No dataset loaded.");
+                            return;
+                        }
+                        for(int i = 0; i < NeuralNetworkHandler.keeper.DataSet.Length; i++)
+                        {
+                            Clients.All.terminalMessage("Data " + i + ":");
+                            Clients.All.terminalMessage("Inputs:");
+                            Clients.All.terminalMessage(NeuralNetworkHandler.keeper.DataSet[i].getInputString());
+                            Clients.All.terminalMessage("Targets:");
+                            Clients.All.terminalMessage(NeuralNetworkHandler.keeper.DataSet[i].getTargetsString());
+                            Clients.All.terminalMessage("");
+                        }
                     }
                 } else if(head == "googledrive")
                 {

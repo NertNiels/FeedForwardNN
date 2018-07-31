@@ -56,14 +56,16 @@ $(function () {
         for (i = 0; i < newLoss.length; i++) {
             var y = newLoss[i];
             if (isNaN(y)) y = -1;
-            var data = {
-                x: length + i,
-                y: y
-            }
-            lossChart.data.datasets[0].data.push(data);
+            if (isFinite(y)) {
+                var data = {
+                    x: length + i,
+                    y: y
+                }
+                lossChart.data.datasets[0].data.push(data);
+                lossChart.update();
 
+            }
         }
-        lossChart.update();
         setTimeout(askLossData, 2000);
     }
 

@@ -323,6 +323,21 @@ namespace NeuralNetwork.Core
             Console.WriteLine("");
         }
 
+        public String table()
+        {
+            String output = "";
+            for (int i = 0; i < rows; i++)
+            {
+
+                for (int j = 0; j < cols; j++)
+                {
+                    output += "| " + data[i, j];
+                }
+                output += "|| ";
+            }
+            return output;
+        }
+
         public static Boolean checkForDimensions(Matrix m, int rows, int cols)
         {
             return m.rows == rows && m.cols == cols;

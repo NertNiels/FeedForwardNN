@@ -49,6 +49,7 @@ namespace NeuralNetworkTrainer
 
             for (int e = 0; e < epochs; e++)
             {
+                List<float> eLoss = new List<float>();
                 for (int i = 0; i < keeper.DataSet.Length; i++)
                 {
                     Matrix output = network.FeedForward(keeper.DataSet[i].Inputs);
@@ -57,7 +58,7 @@ namespace NeuralNetworkTrainer
                     Matrix errors = network.layers.Last().errors;
                     float MSE = Activation.MeanSquaredError(errors);
 
-                    Loss.Add(MSE);
+                    eLoss.Add(MSE);
 
                     timer++;
                     if (timer >= 1000)
@@ -67,6 +68,8 @@ namespace NeuralNetworkTrainer
                         timer = 0;
                     }
                 }
+                float avarage = eLoss.Sum() / eLoss.Count;
+                Loss.Add(avarage);
             }
 
             SaveNetwork(network.Name + "_autosave");
@@ -194,5 +197,15 @@ namespace NeuralNetworkTrainer
     {
         public Matrix Inputs;
         public Matrix Targets;
+        
+        public String getInputString()
+        {
+            return Inputs.table();
+        }
+
+        public String getTargetsString()
+        {
+            return Targets.table();
+        }
     }
 }
