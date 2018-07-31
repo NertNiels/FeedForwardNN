@@ -103,7 +103,8 @@ namespace NeuralNetwork.Core
         public static float MeanSquaredError(Matrix errors)
         {
             float f = 1 / (errors.rows * errors.cols);
-            float errorSum = errors.sum();
+
+            float errorSum = errors.sumSquared();
 
             return f * errorSum;
         }

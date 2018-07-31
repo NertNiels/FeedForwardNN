@@ -256,6 +256,19 @@ namespace NeuralNetwork.Core
             return sum;
         }
 
+        public float sumSquared()
+        {
+            float sum = 0;
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    sum += data[i, j] * data[i, j];
+                }
+            }
+            return sum;
+        }
+
         public static float sum(Matrix m)
         {
             float sum = 0;

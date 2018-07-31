@@ -63,14 +63,21 @@
                         type: 'linear',
                         position:'bottom',
                         ticks: {
-                            min: -1,
                             stepSize: 1
                         }
                     }],
                 },
                 hover: {
                     animationDuration: 0
-                }
+                },
+                animation: {
+                    duration: 0
+                },
+                elements: {
+                    line: {
+                        tension: 0
+                    }
+                },
             }
 
         });
