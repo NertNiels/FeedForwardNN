@@ -19,7 +19,9 @@ namespace NeuralNetworkTrainer
     {
         public static Model network;
 
-        public static List<float> Loss = new List<float>();
+        public static List<float> TrainLoss = new List<float>();
+        public static List<float> ValidLoss = new List<float>();
+        public static List<float> LearningRate = new List<float>();
 
         public static DataKeeper keeper;
 
@@ -43,9 +45,9 @@ namespace NeuralNetworkTrainer
         {
             isTraining = true;
 
-            Loss = new List<float>();
-
-            int timer = 0;
+            TrainLoss = new List<float>();
+            ValidLoss = new List<float>();
+            LearningRate = new List<float>();
 
             for (int e = 0; e < epochs; e++)
             {
@@ -59,24 +61,56 @@ namespace NeuralNetworkTrainer
                     float MSE = Activation.MeanSquaredError(errors);
 
                     eLoss.Add(MSE);
-
-                    timer++;
-                    if (timer >= 1000)
-                    {
-                        network.Description = "Network's autosave on training iteration: " + i;
-                        SaveNetwork(network.Name + "_autosave");
-                        timer = 0;
-                    }
                 }
+                keeper.ShuffleDataSet();
                 float avarage = eLoss.Sum() / eLoss.Count;
-                Loss.Add(avarage);
+
+                LearningRate.Add(Model.LearningRate);
+                if (avarage <= 0.05) Model.LearningRate = 0.005f;
+
+                TrainLoss.Add(avarage);
+                float valid = ValidationTest();
+                ValidLoss.Add(valid);
+
+                try
+                {
+                    network.Description = "Network's autosave on training epoch: " + e;
+                    SaveNetwork(network.Name + "_autosave");
+                } catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
-
-            SaveNetwork(network.Name + "_autosave");
-
+            
             isTraining = false;
             DataHub.dTraining();
             
+        }
+
+        public static float ValidationTest()
+        {
+            List<float> eLoss = new List<float>();
+            for(int i = 0; i < keeper.ValidationSet.Count(); i++)
+            {
+                Matrix output = network.FeedForward(keeper.ValidationSet[i].Inputs);
+                
+                eLoss.Add(Activation.MeanSquaredError(Matrix.subtract(keeper.ValidationSet[i].Targets, output)));
+            }
+
+            float avarage = eLoss.Sum() / eLoss.Count;
+            return avarage;
+        }
+
+        public static float[] NetworkTest()
+        {
+            float[] thoughts = new float[keeper.ValidationSet.Count()];
+
+            for(int i = 0; i < thoughts.Length; i++)
+            {
+                thoughts[i] = network.FeedForward(keeper.ValidationSet[i].Inputs).data[0, 0];
+            }
+
+            return thoughts;
         }
 
         public static String LoadNetwork(String name)
@@ -134,6 +168,9 @@ namespace NeuralNetworkTrainer
     public class DataKeeper
     {
         public Data[] DataSet;
+        private Data[] validationSet;
+
+        public Data[] ValidationSet { get { return validationSet; } set { validationSet = value; } }
 
         public String Name;
 
@@ -164,10 +201,12 @@ namespace NeuralNetworkTrainer
             String datasetContent = GoogleDriveHandler.DownloadGoogleDocument(datasetId, "text/plain", Encoding.UTF8);
 
             NeuralNetworkHandler.keeper = JsonConvert.DeserializeObject<DataKeeper>(datasetContent);
+            NeuralNetworkHandler.keeper.ValidationSet = NeuralNetworkHandler.keeper.DataSet;
             NeuralNetworkHandler.keeper.ShuffleDataSet();
 
             return "Dataset successfully loaded in.";
         }
+        
 
         public static String SaveDataSet()
         {

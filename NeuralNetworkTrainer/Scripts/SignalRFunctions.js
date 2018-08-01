@@ -45,16 +45,15 @@ $(function () {
         }
     }
 
-    hub.client.giveNewTrainingLoss = function (newLoss) {
-        if (newLoss == null) {
-            setTimeout(askLossData, 2000);
+    hub.client.giveNewTrainingLoss = function (newTrainLoss, lr) {
+        if (newTrainLoss == null) {
             return;
         }
         
         var length = lossChart.data.datasets[0].data.length;
         var i;
-        for (i = 0; i < newLoss.length; i++) {
-            var y = newLoss[i];
+        for (i = 0; i < newTrainLoss.length; i++) {
+            var y = newTrainLoss[i];
             if (isNaN(y)) y = -1;
             if (isFinite(y)) {
                 var data = {
@@ -62,12 +61,37 @@ $(function () {
                     y: y
                 }
                 lossChart.data.datasets[0].data.push(data);
-                lossChart.update();
+                
+            }
+            var data = {
+                x: lossChart.data.datasets[2].data.length,
+                y: lr[i]
+            }
+            lossChart.data.datasets[2].data.push(data);
+        }
+        
+    }
 
+    hub.client.giveNewValidationLoss = function (newValidLoss) {
+        if (newValidLoss == null) {
+            return;
+        }
+
+        var length = lossChart.data.datasets[1].data.length;
+        var i;
+        for (i = 0; i < newValidLoss.length; i++) {
+            var y = newValidLoss[i];
+            if (isNaN(y)) y = -1;
+            if (isFinite(y)) {
+                var data = {
+                    x: length + i,
+                    y: y
+                }
+                lossChart.data.datasets[1].data.push(data);
             }
         }
-        setTimeout(askLossData, 2000);
     }
+    
 
     $.connection.hub.start().done(function () {
         hub.server.getNetworkInformation();
@@ -80,6 +104,12 @@ function sendTerminalCommand(command) {
 }
 
 function askLossData() {
-    if (hub != null) hub.server.getNewTrainingLoss(lossChart.data.datasets[0].data.length);
+    if (hub != null) {
+        hub.server.getNewValidationLoss(lossChart.data.datasets[1].data.length);
+        hub.server.getNewTrainingLoss(lossChart.data.datasets[0].data.length);
+
+        lossChart.update();
+        setTimeout(askLossData, 2000);
+    }
     else setTimeout(askLossData, 2000);
 }

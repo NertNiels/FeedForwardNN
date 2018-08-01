@@ -47,9 +47,25 @@
                 datasets: [{
                     label: "Neural Network Loss",
                     pointRadius: 0,
-                    backgroundColor: ['rgba(0, 0, 255, 0.1)'],
-                    borderColor:'blue'
-                }]
+                    backgroundColor: ['rgba(0, 0, 255, 0.2)'],
+                    borderColor: 'blue',
+                    yAxisID: 'Loss'
+                },
+                {
+                    label: "Neural Network Accuracy",
+                    pointRadius: 0,
+                    backgroundColor: ['rgba(255,0,0, 0.2)'],
+                    borderColor: 'red',
+                    yAxisID: 'Loss'
+                },
+                {
+                    label: "Learning Rate",
+                    pointRadius: 0,
+                    backgroundColor: ['rgba(0,255,0,0.2)'],
+                    borderColor: 'green',
+                    yAxisID: 'Learning Rate'
+                }
+                ]
             },
             options: {
                 title: {
@@ -66,6 +82,20 @@
                             stepSize: 1
                         }
                     }],
+                    yAxes: [
+                    {
+                        type: 'linear',
+                        id: 'Loss',
+                        position: 'left'
+                    },
+                    {
+                        type: 'linear',
+                        id: 'Learning Rate',
+                        position: 'right',
+                        ticks: {
+                            min: 0,
+                        }
+                    }]
                 },
                 hover: {
                     animationDuration: 0

@@ -243,7 +243,8 @@ namespace NeuralNetworkTrainer
                         {
                             Console.WriteLine("Upload Failed");
 
-                            throw progress.Exception;
+                            Console.WriteLine(progress.Exception.Message);
+                            break;
                         }
                 }
             };

@@ -32,19 +32,37 @@ namespace NeuralNetworkTrainer.Hubs
 
         public void GetNewTrainingLoss(int currentNumberOfLoss)
         {
-            float[] loss = NeuralNetworkHandler.Loss.ToArray();
+            float[] loss = NeuralNetworkHandler.TrainLoss.ToArray();
             if (loss == null || loss.Length - currentNumberOfLoss <= 0)
             {
-                Clients.Caller.giveNewTrainingLoss(null);
+                Clients.Caller.giveNewTrainingLoss(null, null);
+                return;
+            }
+
+            float[] newLoss = new float[loss.Length - currentNumberOfLoss];
+            Array.Copy(loss, loss.Length - (loss.Length - currentNumberOfLoss), newLoss, 0, loss.Length - currentNumberOfLoss);
+            
+            float[] newLR = new float[loss.Length - currentNumberOfLoss];
+            Array.Copy(NeuralNetworkHandler.LearningRate.ToArray(), loss.Length - (loss.Length - currentNumberOfLoss), newLR, 0, loss.Length - currentNumberOfLoss);
+
+            Clients.Caller.giveNewTrainingLoss(newLoss, newLR);
+        }
+
+        public void GetNewValidationLoss(int currentNumberOfLoss)
+        {
+            float[] loss = NeuralNetworkHandler.ValidLoss.ToArray();
+            if (loss == null || loss.Length - currentNumberOfLoss <= 0)
+            {
+                Clients.Caller.giveNewValidationLoss(null);
                 return;
             }
 
             float[] newLoss = new float[loss.Length - currentNumberOfLoss];
             Array.Copy(loss, loss.Length - (loss.Length - currentNumberOfLoss), newLoss, 0, loss.Length - currentNumberOfLoss);
 
-            Clients.Caller.giveNewTrainingLoss(newLoss);
+            Clients.Caller.giveNewValidationLoss(newLoss);
         }
-
+        
         public void TerminalCommand(String command)
         {
             Clients.All.terminalMessage(command);
@@ -149,21 +167,22 @@ namespace NeuralNetworkTrainer.Hubs
                 } else if (head == "test")
                 {
 
-                    NeuralNetworkHandler.keeper = new DataKeeper();
-                    Data[] data = new Data[6000];
+                    Data[] data = new Data[3600];
 
                     float x = 0;
 
-                    for(int i = 0; i < 6000; i++)
+                    for(int i = 0; i < data.Length; i++)
                     {
                         data[i] = new Data();
-                        data[i].Inputs = new Matrix(1, 1) { data = new float[1, 1] { { (float)(x/(Math.PI * 2.0)) } } };
-                        data[i].Targets = new Matrix(1, 1) { data = new float[1, 1] { { (float) Math.Sin(x) } } };
-                        x +=  (float)0.001;
+                        data[i].Inputs = new Matrix(1, 1) { data = new float[,] { { (1f/360f)*x } } };
+                        data[i].Targets = new Matrix(1, 1) { data = new float[,] { { (float)Math.Sin(x * (Math.PI / 180)) } } };
+                        x += 0.1f;
                     }
-                    NeuralNetworkHandler.keeper.DataSet = data;
 
-                    Clients.All.terminalMessage("Done with creating the dataset.");
+                    NeuralNetworkHandler.keeper = new DataKeeper();
+                    NeuralNetworkHandler.keeper.DataSet = data;
+                    NeuralNetworkHandler.keeper.Name = "sinusfunction";
+
                 } else if(head == "dataset")
                 {
                     if(commands.Length == 1)
