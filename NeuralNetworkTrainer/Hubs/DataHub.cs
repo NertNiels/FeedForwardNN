@@ -16,8 +16,12 @@ namespace NeuralNetworkTrainer.Hubs
     public class DataHub : Hub
     {
 
-        public static Func<Boolean> dTraining;
         
+        public void GetTerminalLog()
+        {
+            Clients.Caller.terminalMessage(ConsoleLogger.log);
+        }
+
         public void GetNetworkInformation()
         {
             Model network = NeuralNetworkHandler.network;
@@ -65,13 +69,13 @@ namespace NeuralNetworkTrainer.Hubs
         
         public void TerminalCommand(String command)
         {
-            Clients.All.terminalMessage(command);
+            Console.WriteLine(command);
             try
             {
                 command = command.ToLower();
                 if (String.IsNullOrEmpty(command) || String.IsNullOrWhiteSpace(command))
                 {
-                    Clients.All.terminalError("That's not a valid command... Type \'help\' if you don\'t know what command to use.");
+                    Console.WriteLine("That's not a valid command... Type \'help\' if you don\'t know what command to use.");
                     return;
                 }
                 String[] commands = command.Split(' ');
@@ -84,14 +88,14 @@ namespace NeuralNetworkTrainer.Hubs
                     Model network = NeuralNetworkHandler.network;
                     if (commands.Length == 1)
                     {
-                        if (network == null) Clients.All.terminalMessage("There is no Network currently loaded.");
+                        if (network == null) Console.WriteLine("There is no Network currently loaded.");
                         else
                         {
                             String message =
                                 "Current loaded network:\n" +
                                 "\tName:\t" + network.Name + "\n" +
                                 "\tType:\t" + network.Type;
-                            Clients.All.terminalMessage(message);
+                            Console.WriteLine(message);
                         }
                     }
                     else if (commands[1] == "create")
@@ -117,36 +121,36 @@ namespace NeuralNetworkTrainer.Hubs
                                 }
                                 else
                                 {
-                                    Clients.All.terminalError(String.Format("Layer type {0} does not exist.", commands[i]));
+                                    Console.Error.WriteLine(String.Format("Layer type {0} does not exist.", commands[i]));
                                     return;
                                 }
                                 l.nodes = int.Parse(commands[i + 1]);
                                 layers.Add(l);
                             }
                             NeuralNetworkHandler.CreateNetwork(layers.ToArray(), commands[2], commands[3]);
-                            Clients.All.terminalMessage("Neural Network successfully created.");
+                            Console.WriteLine("Neural Network successfully created.");
                             return;
                         }
                     } else if(commands[1] == "load")
                     {
-                        Clients.All.terminalMessage(NeuralNetworkHandler.LoadNetwork(commands[2]));
+                        Console.WriteLine(NeuralNetworkHandler.LoadNetwork(commands[2]));
                     } else if(commands[1] == "save")
                     {
-                        if(commands.Length == 2) Clients.All.terminalMessage(NeuralNetworkHandler.SaveNetwork());
-                        else Clients.All.terminalMessage(NeuralNetworkHandler.SaveNetwork(commands[2]));
+                        if(commands.Length == 2) Console.WriteLine(NeuralNetworkHandler.SaveNetwork());
+                        else Console.WriteLine(NeuralNetworkHandler.SaveNetwork(commands[2]));
                     } else if(commands[1] == "randomize")
                     {
-                        Clients.All.terminalMessage(NeuralNetworkHandler.RandomizeNetwork());
+                        Console.WriteLine(NeuralNetworkHandler.RandomizeNetwork());
                     } else if(commands[1] == "train")
                     {
                         if (network == null)
                         {
-                            Clients.All.terminalMessage("No network loaded.");
+                            Console.Error.WriteLine("No network loaded.");
                             return;
                         }
                         if (NeuralNetworkHandler.keeper == null)
                         {
-                            Clients.All.terminalMessage("No dataset loaded.");
+                            Console.Error.WriteLine("No dataset loaded.");
                             return;
                         }
 
@@ -156,12 +160,11 @@ namespace NeuralNetworkTrainer.Hubs
                         NeuralNetworkHandler.train.IsBackground = true;
                         NeuralNetworkHandler.train.Name = "Training Thread";
 
-                        dTraining = doneTraining;
 
                         NeuralNetworkHandler.train.Start();
                     } else if(commands[1] == "learningrate")
                     {
-                        if (commands.Length == 2) Clients.All.terminalMessage("Learning rate: " + Model.LearningRate);
+                        if (commands.Length == 2) Console.WriteLine("Learning rate: " + Model.LearningRate);
                         else Model.LearningRate = float.Parse(commands[2]);
                     }
                 } else if (head == "test")
@@ -187,15 +190,15 @@ namespace NeuralNetworkTrainer.Hubs
                 {
                     if(commands.Length == 1)
                     {
-                        if (NeuralNetworkHandler.keeper == null) Clients.All.terminalMessage("There is no dataset loaded yet.");
-                        else Clients.All.terminalMessage(String.Format("The dataset with the name {0} is currently loaded.", NeuralNetworkHandler.keeper.Name));
+                        if (NeuralNetworkHandler.keeper == null) Console.WriteLine("There is no dataset loaded yet.");
+                        else Console.WriteLine(String.Format("The dataset with the name {0} is currently loaded.", NeuralNetworkHandler.keeper.Name));
                     } else if(commands[1] == "load")
                     {
-                        Clients.All.terminalMessage(DataKeeper.LoadDataSet(commands[2]));
+                        Console.WriteLine(DataKeeper.LoadDataSet(commands[2]));
                     } else if (commands[1] == "save")
                     {
-                        if (commands.Length == 2) Clients.All.terminalMessage(DataKeeper.SaveDataSet());
-                        else Clients.All.terminalMessage(DataKeeper.SaveDataSet(commands[2]));
+                        if (commands.Length == 2) Console.WriteLine(DataKeeper.SaveDataSet());
+                        else Console.WriteLine(DataKeeper.SaveDataSet(commands[2]));
                     } else if(commands[1] == "unload")
                     {
                         NeuralNetworkHandler.keeper = null;
@@ -203,17 +206,17 @@ namespace NeuralNetworkTrainer.Hubs
                     {
                         if(NeuralNetworkHandler.keeper == null)
                         {
-                            Clients.All.terminalMessage("No dataset loaded.");
+                            Console.Error.WriteLine("No dataset loaded.");
                             return;
                         }
                         for(int i = 0; i < NeuralNetworkHandler.keeper.DataSet.Length; i++)
                         {
-                            Clients.All.terminalMessage("Data " + i + ":");
-                            Clients.All.terminalMessage("Inputs:");
-                            Clients.All.terminalMessage(NeuralNetworkHandler.keeper.DataSet[i].getInputString());
-                            Clients.All.terminalMessage("Targets:");
-                            Clients.All.terminalMessage(NeuralNetworkHandler.keeper.DataSet[i].getTargetsString());
-                            Clients.All.terminalMessage("");
+                            Console.WriteLine("Data " + i + ":");
+                            Console.WriteLine("Inputs:");
+                            Console.WriteLine(NeuralNetworkHandler.keeper.DataSet[i].getInputString());
+                            Console.WriteLine("Targets:");
+                            Console.WriteLine(NeuralNetworkHandler.keeper.DataSet[i].getTargetsString());
+                            Console.WriteLine("");
                         }
                     }
                 } else if(head == "googledrive")
@@ -221,36 +224,38 @@ namespace NeuralNetworkTrainer.Hubs
                     if(commands[1] == "login")
                     {
                         GoogleDriveHandler.GoogleDriveLogin(HttpRuntime.AppDomainAppPath + "/credentials.json");
-                        Clients.All.terminalMessage("Successfully logged in on Google Drive.");
+                        Console.WriteLine("Successfully logged in on Google Drive.");
                     } else if (commands[1] == "logout")
                     {
                         GoogleDriveHandler.GoogleDriveLogout("credentials.json");
-                        Clients.All.terminalMessage("Successfully logged out from Google Drive.");
+                        Console.WriteLine("Successfully logged out from Google Drive.");
                     } else if (commands[1] == "list")
                     {
                         IList<Google.Apis.Drive.v3.Data.File> list = GoogleDriveHandler.GetFileList();
 
                         foreach (var file in list)
                         {
-                            Clients.All.terminalMessage(String.Format("{0} ({1})", file.Name, file.Id));
+                            Console.WriteLine(String.Format("{0} ({1})", file.Name, file.Id));
                         }
                     }
 
                     
                 }
-                else Clients.All.terminalError("That's not a valid command... Type \'help\' if you don\'t know what command to use.");
+                else Console.Error.WriteLine("That's not a valid command... Type \'help\' if you don\'t know what command to use.");
             } catch (Exception e)
             {
-                Clients.All.terminalError("Command resolved in an error.");
-                Clients.All.terminalError(e.Message);
-                Clients.All.terminalError(e.StackTrace);
+                Console.Error.WriteLine("Command resolved in an error.");
+                Console.Error.WriteLine(e.Message);
+                Console.Error.WriteLine(e.StackTrace);
             }
         }
+        
 
-        public Boolean doneTraining()
+        public static void MessageClients(String message)
         {
-            Clients.All.terminalMessage("Training is done");
-            return true;
+            GlobalHost.ConnectionManager.GetHubContext<DataHub>().Clients.All.terminalMessage(message);
         }
+
+        
     }
 }

@@ -83,7 +83,7 @@ namespace NeuralNetworkTrainer
             }
             
             isTraining = false;
-            DataHub.dTraining();
+            Console.WriteLine("Training is done!");
             
         }
 

@@ -12,6 +12,7 @@ namespace NeuralNetworkTrainer
     {
         public void Configuration(IAppBuilder app)
         {
+            ConsoleLogger.Initialize();
             app.MapSignalR();
         }
     }

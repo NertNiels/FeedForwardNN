@@ -154,6 +154,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleWriter.cs" />
     <Compile Include="GoogleDriveHandler.cs" />
     <Compile Include="Hubs\DataHub.cs" />
     <Compile Include="NeuralNetworkHandler.cs" />

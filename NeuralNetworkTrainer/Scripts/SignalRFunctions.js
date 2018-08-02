@@ -1,26 +1,25 @@
 ﻿var hub;
+var initialized = false;
 
 $(function () {
 
     hub = $.connection.dataHub;
 
     hub.client.terminalMessage = function (message) {
+        message = message.replace(/\r?\n/g, '<br />').replace("(ex)", "<span style='color:red'>").replace("(/ex)", "</span>").replace("\t", "&#9;");
+        
         var term = document.getElementById("terminal");
+        if (term == null) return;
 
-        var entry = document.createElement("li");
-        entry.appendChild(document.createTextNode(message));
-
-        term.appendChild(entry);
+        term.innerHTML += message;
     };
 
     hub.client.terminalError = function (message) {
+        message = message.replace(/\r?\n/g, '<br />');
         var term = document.getElementById("terminal");
+        if (term = null) return;
 
-        var entry = document.createElement("li");
-        entry.appendChild(document.createTextNode(message));
-        entry.style.color = "red";
-
-        term.appendChild(entry);
+        term.innerHTML += "<span style='color:red'>" + message + "</span>";
     };
 
     hub.client.setNetworkInformation = function (training, type, description, isTraining) {
@@ -95,16 +94,17 @@ $(function () {
 
     $.connection.hub.start().done(function () {
         hub.server.getNetworkInformation();
+        initialized = true;
     });
 
 });
 
 function sendTerminalCommand(command) {
-    if (hub != null) hub.server.terminalCommand(command);
+    if (initialized) hub.server.terminalCommand(command);
 }
 
 function askLossData() {
-    if (hub != null) {
+    if (initialized) {
         hub.server.getNewValidationLoss(lossChart.data.datasets[1].data.length);
         hub.server.getNewTrainingLoss(lossChart.data.datasets[0].data.length);
 
@@ -112,4 +112,10 @@ function askLossData() {
         setTimeout(askLossData, 2000);
     }
     else setTimeout(askLossData, 2000);
+}
+
+function getTerminalLog() {
+    if (initialized) {
+        hub.server.getTerminalLog();
+    } else setTimeout(getTerminalLog, 100);
 }

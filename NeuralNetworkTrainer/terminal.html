@@ -14,7 +14,7 @@
     <script src="Scripts/SignalRFunctions.js"></script>
     <script src="Scripts/GlobalFunctions.js"></script>
 </head>
-<body>
+<body onload="loaded()">
     <ul class="navi">
         <li><img src="logo.png" width="41" height="41" /></li>
         <li><a href="index.html">Home</a></li>
@@ -27,12 +27,13 @@
 
     <h1 class="title">Terminal</h1>
 
-    <div style="background-color:darkblue;width:50%;height:400px;margin:0 auto;overflow-wrap:break-word;overflow-y:auto">
+    <div style="background-color:darkblue;width:50%;height:400px;margin:0 auto;overflow-wrap:break-word;">
         
-        <div style="background-color:black;padding-left:5px"><p style="color:red;display:inline">$*/</p><input type="text" style="color:white;width:95%;float:right;background-color:transparent;border:none;display:inline" onkeydown="enterCommand(this)" /></div>
-        <ul id="terminal" style="color:white;list-style-type:none;text-decoration:none">
+        <div style="background-color:black;padding-left:5px;height:5%"><p style="color:red;display:inline">$*/</p><input type="text" style="color:white;width:95%;float:right;background-color:transparent;border:none;display:inline" onkeydown="enterCommand(this)" /></div>
+        <div style="overflow-y:auto;height:95%"><p id="terminal" style="color:white;padding-left:50px"></p></div>
+        <!--<ul id="terminal" style="color:white;list-style-type:none;text-decoration:none">
             
-        </ul>
+        </ul>-->
     </div>
 
     <script>
@@ -43,6 +44,10 @@
 
                 com.value = "";
             }
+        }
+
+        function loaded() {
+            getTerminalLog();
         }
     </script>
 
