@@ -44,11 +44,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Activation.cs" />
+    <Compile Include="Core\Filter.cs" />
     <Compile Include="Core\Matrix.cs" />
     <Compile Include="Core\Model.cs" />
     <Compile Include="IO\LayerConverter.cs" />
     <Compile Include="IO\ModelConverter.cs" />
     <Compile Include="IO\ModelFileHandler.cs" />
+    <Compile Include="Layers\ConvolutionLayer.cs" />
     <Compile Include="Layers\InputLayer.cs" />
     <Compile Include="Layers\LayerBase.cs" />
     <Compile Include="Layers\LeakyReluLayer.cs" />

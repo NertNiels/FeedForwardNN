@@ -13,7 +13,6 @@ namespace NeuralNetwork.Layers
 
         protected LayerType layerType;
         public LayerType LayerType { get { return layerType; } }
-        
 
         public int nodes;
         public float dropout = 0f;
@@ -22,6 +21,7 @@ namespace NeuralNetwork.Layers
         public Matrix weights;
         public Matrix errors;
         public Matrix bias;
+        
         
 
         public abstract void FeedForward(LayerBase input);
