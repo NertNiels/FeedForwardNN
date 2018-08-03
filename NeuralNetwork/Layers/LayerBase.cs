@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using NeuralNetwork.Core;
+using NeuralNetwork.Core.Convolution;
 
 namespace NeuralNetwork.Layers
 {
@@ -21,8 +22,9 @@ namespace NeuralNetwork.Layers
         public Matrix weights;
         public Matrix errors;
         public Matrix bias;
-        
-        
+
+        public Filters filters;
+        public FeatureMaps featuremaps;
 
         public abstract void FeedForward(LayerBase input);
         public abstract void Backpropagate(LayerBase input, Matrix errors);

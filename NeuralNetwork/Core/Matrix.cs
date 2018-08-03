@@ -321,6 +321,44 @@ namespace NeuralNetwork.Core
             return output;
         }
 
+        public Matrix subMatrix(int xIn, int yIn, int width, int height)
+        {
+            Matrix output = new Matrix(width, height);
+            int xOut = 0;
+            int yOut = 0;
+            for(int x = xIn; x < xIn + width; xIn++)
+            {
+                for (int y = yIn; y < yIn + height; yIn++)
+                {
+                    if (x < 0 || x >= rows || y < 0 || y >= cols) output.data[xOut, yOut] = 0;
+                    else output.data[xOut, yOut] = data[x, y];
+                    yOut++;
+                }
+                xOut++;
+            }
+
+            return output;
+        }
+
+        public static Matrix subMatrix(Matrix source, int xIn, int yIn, int width, int height)
+        {
+            Matrix output = new Matrix(width, height);
+            int xOut = 0;
+            int yOut = 0;
+            for (int x = xIn; x < xIn + width; xIn++)
+            {
+                for (int y = yIn; y < yIn + height; yIn++)
+                {
+                    if (x < 0 || x >= source.rows || y < 0 || y >= source.cols) output.data[xOut, yOut] = 0;
+                    else output.data[xOut, yOut] = source.data[x, y];
+                    yOut++;
+                }
+                xOut++;
+            }
+
+            return output;
+        }
+
         public static void table(Matrix m)
         {
             if (m == null) return;
