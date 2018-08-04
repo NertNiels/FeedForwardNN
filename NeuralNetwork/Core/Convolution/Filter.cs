@@ -51,5 +51,14 @@ namespace NeuralNetwork.Core.Convolution
             }
             Bias = (float)r.NextDouble();
         }
+
+        public void Update(Matrix deltas, int kernel)
+        {
+            float lr = Model.LearningRate;
+
+            deltas.multiply(lr);
+
+            this[kernel].subtract(deltas);
+        }
     }
 }

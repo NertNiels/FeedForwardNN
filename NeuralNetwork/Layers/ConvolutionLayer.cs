@@ -57,8 +57,57 @@ namespace NeuralNetwork.Layers
         public override void Backpropagate(LayerBase input, Matrix errors)
         {
             input.featuremaps.SetZeroError();
+            FeatureMaps features = input.featuremaps;
 
 
+            for(int f = 0; f < input.filters.Count; f++)
+            {
+                Filter filter = input.filters[f];
+                FeatureMap mapOut = featuremaps[f];
+
+                for (int k = 0; k < filter.Count; k++)
+                {
+                    FeatureMap mapIn = features[k];
+                    Matrix kernel = filter[k];
+
+                    Matrix deltas = new Matrix(input.filters.Width, input.filters.Height);
+
+                    int xOut = 0;
+                    for (int x = -features.Padding; x < features.Width + features.Padding - input.filters.Width + 1; x += features.Stride)
+                    {
+                        int yOut = 0;
+
+                        for (int y = -input.featuremaps.Padding; y < features.Height + features.Padding - input.filters.Height + 1; x += features.Stride)
+                        {
+                            Matrix sub = Matrix.subMatrix(mapIn.map, x, y, featuremaps.Width, featuremaps.Height);
+                            Matrix multiplied = Matrix.hadamard(sub, mapOut.errors.flip());
+
+                            float sum = multiplied.sum();
+                            deltas.data[xOut, yOut] = sum;
+                        }
+                    }
+
+                    xOut = 0;
+                    for(int x = -1 + features.Padding; x < featuremaps.Width - input.filters.Width + 2 - features.Padding; x++)
+                    {
+                        int yOut = 0;
+                        for (int y = -1 + features.Padding; y < featuremaps.Height - input.filters.Height + 2 - features.Padding; y++)
+                        {
+                            Matrix sub = Matrix.subMatrix(mapOut.errors, x, y, input.filters.Width, input.filters.Height);
+                            Matrix multiplied = Matrix.hadamard(sub, kernel);
+                            
+
+                            yOut += features.Stride;
+                        }
+
+                        xOut += features.Stride;
+                    }
+
+
+
+                    filter.Update(deltas, k);
+                }
+            }
         }
 
         public override void Backpropagate(LayerBase input, LayerBase output)
