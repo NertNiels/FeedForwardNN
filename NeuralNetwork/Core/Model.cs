@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using NeuralNetwork.Layers;
+using NeuralNetwork.Layers.Convolution;
 
 namespace NeuralNetwork.Core
 {
@@ -78,9 +79,17 @@ namespace NeuralNetwork.Core
 
         public Model leakyReluLayer(int nodes, float dropout)
         {
-            LeakyReluLayer layer = new LeakyReluLayer();
+            Layers.Convolution.LeakyReluLayer layer = new Layers.Convolution.LeakyReluLayer();
             layer.nodes = nodes;
             layer.dropout = dropout;
+
+            initLayers.Add(layer);
+            return this;
+        }
+
+        public Model convolutionLayer(int inputCount, int inputWidth, int inputHeight, int filterCount, int filterWidth, int filterHeight, int padding, int stride)
+        {
+            ConvolutionLayer layer = new ConvolutionLayer(inputCount, inputWidth, inputHeight, filterCount, filterWidth, filterHeight, padding, stride);
 
             initLayers.Add(layer);
             return this;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using NeuralNetwork.Core;
 using NeuralNetwork.Core.Convolution;
 
-namespace NeuralNetwork.Layers
+namespace NeuralNetwork.Layers.Convolution
 {
     class ConvolutionLayer : LayerBase
     {
@@ -95,7 +95,10 @@ namespace NeuralNetwork.Layers
                         {
                             Matrix sub = Matrix.subMatrix(mapOut.errors, x, y, input.filters.Width, input.filters.Height);
                             Matrix multiplied = Matrix.hadamard(sub, kernel);
-                            
+
+                            float sum = multiplied.sum();
+
+                            input.featuremaps[k].errors.data[xOut, yOut] = sum;                           
 
                             yOut += features.Stride;
                         }
@@ -112,7 +115,7 @@ namespace NeuralNetwork.Layers
 
         public override void Backpropagate(LayerBase input, LayerBase output)
         {
-            throw new NotSupportedException("Could not backpropagate when a the final layer is a convolutional layer.");
+            throw new NotSupportedException("Could not backpropagate when the final layer is a convolutional layer.");
         }
         
         public override void initWeights(Random r, LayerBase nextLayer)

@@ -51,7 +51,8 @@
     <Compile Include="IO\LayerConverter.cs" />
     <Compile Include="IO\ModelConverter.cs" />
     <Compile Include="IO\ModelFileHandler.cs" />
-    <Compile Include="Layers\ConvolutionLayer.cs" />
+    <Compile Include="Layers\Convolution\ConvolutionLayer.cs" />
+    <Compile Include="Layers\Convolution\LeakyReluLayer.cs" />
     <Compile Include="Layers\InputLayer.cs" />
     <Compile Include="Layers\LayerBase.cs" />
     <Compile Include="Layers\LeakyReluLayer.cs" />
