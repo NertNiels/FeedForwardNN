@@ -25,6 +25,7 @@ namespace NeuralNetwork.Core
         {
             this.layers = layers;
         }
+        
 
         public Matrix FeedForward(Matrix input)
         {

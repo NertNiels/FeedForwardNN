@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 using NeuralNetwork.Core;
 using NeuralNetwork.IO;
+using NeuralNetwork.Layers;
+using NeuralNetwork.Layers.Convolution;
 
 namespace FeedForward
 {
@@ -19,6 +21,47 @@ namespace FeedForward
 
         static void Main(string[] args)
         {
+
+            LayerBase[] layers = new LayerBase[]
+            {
+                new InputLayer(1, 6, 6, 1, 4, 4, 0, 1),
+                new ConvolutionLayer(1, 6, 6, 4, 4, 1, 2, 2, 0, 1),
+                new NeuralNetwork.Layers.Convolution.LeakyReluLayer(),
+                new ConvolutionLayer(1, 3, 3, 2, 2, 0, 0, 0, 0, 1),
+                new NeuralNetwork.Layers.Convolution.LeakyReluLayer()
+            };
+
+            Matrix input = new Matrix(6, 6)
+            {
+                data = new float[,]
+                {
+                    { 0.2f,     0.4f,   0.1f,   0.7f,   0.76f,  0.54f },
+                    { 0.2f,     0.4f,   0.54f,  0.1f,   0.7f,   0.76f },
+                    { 0.2f,     0.4f,   0.1f,   0.54f,  0.7f,   0.76f },
+                    { 0.2f,     0.1f,   0.4f,   0.7f,   0.76f,  0.54f },
+                    { 0.2f,     0.4f,   0.1f,   0.7f,   0.76f,  0.54f },
+                    { 0.2f,     0.4f,   0.1f,   0.7f,   0.76f,  0.54f },
+                }
+            };
+
+            Matrix targets = new Matrix(2, 2)
+            {
+                data = new float[,]
+                {
+                    { 0.4f,     0.5f },
+                    { 0.1f,     0.7f },
+                }
+            };
+
+            Model model = new Model(layers);
+            model.randomizeWeights(new Random());
+
+            for(int i = 0; i < 100; i++)
+            {
+
+            }
+
+
 
         }
         

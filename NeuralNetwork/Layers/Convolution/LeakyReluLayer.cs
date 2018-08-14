@@ -7,8 +7,13 @@ using NeuralNetwork.Core;
 
 namespace NeuralNetwork.Layers.Convolution
 {
-    class LeakyReluLayer : LayerBase
+    public class LeakyReluLayer : LayerBase
     {
+        public LeakyReluLayer()
+        {
+            this.layerType = LayerType.ConvolutionLeakyRelu;
+        }
+
         public override void FeedForward(LayerBase input)
         {
             featuremaps = input.featuremaps;
@@ -22,9 +27,10 @@ namespace NeuralNetwork.Layers.Convolution
 
         public override void Backpropagate(LayerBase input, Matrix errors)
         {
+            featuremaps.SetZeroError();
             for(int i = 0; i < featuremaps.Count; i++)
             {
-                
+                featuremaps[i].errors = Matrix.map(Activation.dlrelu, featuremaps[i].map);
             }
         }
 

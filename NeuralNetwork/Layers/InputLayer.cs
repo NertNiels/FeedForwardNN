@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using NeuralNetwork.Core;
+using NeuralNetwork.Core.Convolution;
 
 namespace NeuralNetwork.Layers
 {
@@ -12,6 +14,14 @@ namespace NeuralNetwork.Layers
         public InputLayer()
         {
             this.layerType = LayerType.Input;
+        }
+
+        public InputLayer(int count, int width, int height, int filterCount, int filterWidth, int filterHeight, int padding, int stride)
+        {
+            featuremaps = new FeatureMaps(count, width, height, padding, stride);
+            filters = new Filters(filterCount, filterWidth, filterHeight, count);
+
+            this.layerType = LayerType.ConvolutionInput;
         }
 
         public override void FeedForward(LayerBase input)

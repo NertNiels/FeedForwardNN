@@ -39,6 +39,9 @@ namespace NeuralNetwork.Layers
     {
         Input,
         LeakyRelu,
-        Sigmoid
+        Sigmoid,
+        Convolution,
+        ConvolutionLeakyRelu,
+        ConvolutionInput
     }
 }

@@ -9,16 +9,18 @@ using NeuralNetwork.Core.Convolution;
 
 namespace NeuralNetwork.Layers.Convolution
 {
-    class ConvolutionLayer : LayerBase
+    public class ConvolutionLayer : LayerBase
     {
-        public ConvolutionLayer(int inputCount, int inputWidth, int inputHeight, int filterCount, int filterWidth, int filterHeight, int padding, int stride)
+        public ConvolutionLayer(int inputCount, int inputWidth, int inputHeight, int prevFilterWidth, int prevFilterHeight, int filterCount, int filterWidth, int filterHeight, int padding, int stride)
         {
-            double outputWidth = (inputWidth - filterWidth + (2 * padding)) / stride + 1;
-            double outputHeight = (inputHeight - filterHeight + (2 * padding)) / stride + 1;
+            double outputWidth = (inputWidth - prevFilterWidth + (2 * padding)) / stride + 1;
+            double outputHeight = (inputHeight - prevFilterHeight + (2 * padding)) / stride + 1;
             if (outputWidth % 1 != 0 || outputHeight % 1 != 0) throw new ArgumentException("Configered padding or stride is invalid for input and filter size.");
 
-            featuremaps = new FeatureMaps(inputCount, inputWidth, inputHeight, padding, stride);
+            featuremaps = new FeatureMaps(inputCount, (int)outputWidth, (int)outputHeight, padding, stride);
             filters = new Filters(filterCount, filterWidth, filterHeight, inputCount);
+
+            this.layerType = LayerType.Convolution;
         }
 
         public override void FeedForward(LayerBase input)
@@ -27,11 +29,11 @@ namespace NeuralNetwork.Layers.Convolution
             FeatureMaps features = input.featuremaps;
 
 
-            for(int f = 0; f < input.filters.Count; f++)              // Loop thru the (previous) filters
+            for(int f = 0; f < input.filters.Count; f++)
             {
                 Filter filter = input.filters[f];
 
-                for(int k = 0; k < filter.Count; k++)                     // Loop thru the (previous) filters' kernels
+                for(int k = 0; k < filter.Count; k++)
                 {
                     Matrix kernel = filter[k].flip();
 

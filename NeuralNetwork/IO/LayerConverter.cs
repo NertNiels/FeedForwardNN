@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using NeuralNetwork.Layers;
+using NeuralNetwork.Layers.Convolution;
 
 namespace NeuralNetwork.IO
 {
@@ -29,9 +30,15 @@ namespace NeuralNetwork.IO
                 case LayerType.Input:
                     return jo.ToObject<InputLayer>(serializer);
                 case LayerType.LeakyRelu:
-                    return jo.ToObject<LeakyReluLayer>(serializer);
+                    return jo.ToObject<Layers.LeakyReluLayer>(serializer);
                 case LayerType.Sigmoid:
                     return jo.ToObject<SigmoidLayer>(serializer);
+                case LayerType.ConvolutionInput:
+                    return jo.ToObject<InputLayer>(serializer);
+                case LayerType.Convolution:
+                    return jo.ToObject<ConvolutionLayer>(serializer);
+                case LayerType.ConvolutionLeakyRelu:
+                    return jo.ToObject<Layers.Convolution.LeakyReluLayer>(serializer);
                 default:
                     return null;
             }
