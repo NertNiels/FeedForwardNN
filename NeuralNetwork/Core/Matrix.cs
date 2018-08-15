@@ -326,14 +326,15 @@ namespace NeuralNetwork.Core
             Matrix output = new Matrix(width, height);
             int xOut = 0;
             int yOut = 0;
-            for(int x = xIn; x < xIn + width; xIn++)
+            for(int x = xIn; x < xIn + width; x++)
             {
-                for (int y = yIn; y < yIn + height; yIn++)
+                for (int y = yIn; y < yIn + height; y++)
                 {
                     if (x < 0 || x >= rows || y < 0 || y >= cols) output.data[xOut, yOut] = 0;
                     else output.data[xOut, yOut] = data[x, y];
                     yOut++;
                 }
+                yOut = 0;
                 xOut++;
             }
 
@@ -344,10 +345,10 @@ namespace NeuralNetwork.Core
         {
             Matrix output = new Matrix(width, height);
             int xOut = 0;
-            int yOut = 0;
-            for (int x = xIn; x < xIn + width; xIn++)
+            for (int x = xIn; x < xIn + width; x++)
             {
-                for (int y = yIn; y < yIn + height; yIn++)
+                int yOut = 0;
+                for (int y = yIn; y < yIn + height; y++)
                 {
                     if (x < 0 || x >= source.rows || y < 0 || y >= source.cols) output.data[xOut, yOut] = 0;
                     else output.data[xOut, yOut] = source.data[x, y];

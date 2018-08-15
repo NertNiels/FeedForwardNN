@@ -44,6 +44,23 @@ namespace NeuralNetwork.Core
             return layers[layers.Length-1].values;
         }
 
+        public Matrix ConvolutionFeedForward(Matrix input)
+        {
+            if (!Matrix.checkForDimensions(input, layers[0].featuremaps.Width, layers[0].featuremaps.Height))
+            {
+                throw new ArgumentException("Input Data does not have the right dimension! Please take a look at:\n\tInput:\t" + input.rows + ",\t" + input.cols + "\n\tLayer:\t" + layers[0].featuremaps.Width + ",\t" + layers[0].featuremaps.Height);
+            }
+
+            layers[0].featuremaps[0].map = input;
+
+            for (int i = 1; i < layers.Length; i++)
+            {
+                layers[i].FeedForward(layers[i - 1]);
+            }
+
+            return layers[layers.Length - 1].featuremaps[0].map;
+        }
+
         public void Backpropagate(Matrix output, Matrix targets)
         {
             Matrix errors = Matrix.subtract(targets, output);
@@ -88,9 +105,9 @@ namespace NeuralNetwork.Core
             return this;
         }
 
-        public Model convolutionLayer(int inputCount, int inputWidth, int inputHeight, int filterCount, int filterWidth, int filterHeight, int padding, int stride)
+        public Model convolutionLayer(int inputCount, int inputWidth, int inputHeight, int prevFilterWidth, int prevFilterHeight, int filterCount, int filterWidth, int filterHeight, int padding, int stride)
         {
-            ConvolutionLayer layer = new ConvolutionLayer(inputCount, inputWidth, inputHeight, filterCount, filterWidth, filterHeight, padding, stride);
+            ConvolutionLayer layer = new ConvolutionLayer(inputCount, inputWidth, inputHeight, prevFilterWidth, prevFilterHeight, filterCount, filterWidth, filterHeight, padding, stride);
 
             initLayers.Add(layer);
             return this;

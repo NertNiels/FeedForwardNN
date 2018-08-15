@@ -36,7 +36,11 @@ namespace NeuralNetwork.Layers.Convolution
 
         public override void Backpropagate(LayerBase input, LayerBase output)
         {
-            throw new NotSupportedException("Could not backpropagate when the final layer is a convolutional layer.");
+            featuremaps.SetZeroError();
+            for (int i = 0; i < featuremaps.Count; i++)
+            {
+                featuremaps[i].errors = Matrix.map(Activation.dlrelu, featuremaps[i].map);
+            }
         }
 
         public override void initWeights(Random r, LayerBase nextLayer)

@@ -43,14 +43,16 @@ namespace NeuralNetwork.Layers.Convolution
                     {
                         int yOut = 0;
 
-                        for (int y = -input.featuremaps.Padding; y < features.Height + features.Padding - input.filters.Height + 1; x += features.Stride)
+                        for (int y = -input.featuremaps.Padding; y < features.Height + features.Padding - input.filters.Height + 1; y += features.Stride)
                         {
                             Matrix sub = features[k].map.subMatrix(x, y, kernel.rows, kernel.cols);
                             Matrix multiplied = Matrix.hadamard(kernel, sub);
 
                             float sum = Matrix.sum(multiplied);
                             featuremaps[f].map.data[xOut, yOut] = sum + filter.Bias;
+                            yOut++;
                         }
+                        xOut++;
                     }
                 }
             }
@@ -117,7 +119,61 @@ namespace NeuralNetwork.Layers.Convolution
 
         public override void Backpropagate(LayerBase input, LayerBase output)
         {
-            throw new NotSupportedException("Could not backpropagate when the final layer is a convolutional layer.");
+            input.featuremaps.SetZeroError();
+            FeatureMaps features = input.featuremaps;
+
+
+            for (int f = 0; f < input.filters.Count; f++)
+            {
+                Filter filter = input.filters[f];
+                FeatureMap mapOut = featuremaps[f];
+
+                for (int k = 0; k < filter.Count; k++)
+                {
+                    FeatureMap mapIn = features[k];
+                    Matrix kernel = filter[k];
+
+                    Matrix deltas = new Matrix(input.filters.Width, input.filters.Height);
+
+                    int xOut = 0;
+                    for (int x = -features.Padding; x < features.Width + features.Padding - input.filters.Width + 1; x += features.Stride)
+                    {
+                        int yOut = 0;
+
+                        for (int y = -input.featuremaps.Padding; y < features.Height + features.Padding - input.filters.Height + 1; y += features.Stride)
+                        {
+                            Matrix sub = Matrix.subMatrix(mapIn.map, x, y, featuremaps.Width, featuremaps.Height);
+                            Matrix multiplied = Matrix.hadamard(sub, mapOut.errors.flip());
+
+                            float sum = multiplied.sum();
+                            deltas.data[xOut, yOut] = sum;
+                        }
+                    }
+
+                    xOut = 0;
+                    for (int x = -1 + features.Padding; x < featuremaps.Width - input.filters.Width + 2 - features.Padding; x++)
+                    {
+                        int yOut = 0;
+                        for (int y = -1 + features.Padding; y < featuremaps.Height - input.filters.Height + 2 - features.Padding; y++)
+                        {
+                            Matrix sub = Matrix.subMatrix(mapOut.errors, x, y, input.filters.Width, input.filters.Height);
+                            Matrix multiplied = Matrix.hadamard(sub, kernel);
+
+                            float sum = multiplied.sum();
+
+                            input.featuremaps[k].errors.data[xOut, yOut] = sum;
+
+                            yOut += features.Stride;
+                        }
+
+                        xOut += features.Stride;
+                    }
+
+
+
+                    filter.Update(deltas, k);
+                }
+            }
         }
         
         public override void initWeights(Random r, LayerBase nextLayer)
