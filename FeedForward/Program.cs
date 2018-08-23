@@ -56,6 +56,9 @@ namespace FeedForward
             Model model = new Model(layers);
             model.randomizeWeights(new Random());
 
+            Console.WriteLine("Input:");
+            Matrix.table(input);
+
             Console.WriteLine("Output Before:");
             Matrix.table(model.ConvolutionFeedForward(input));
 

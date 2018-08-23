@@ -37,9 +37,12 @@ namespace NeuralNetwork.Layers.Convolution
         public override void Backpropagate(LayerBase input, LayerBase output)
         {
             featuremaps.SetZeroError();
+
+            
             for (int i = 0; i < featuremaps.Count; i++)
             {
-                featuremaps[i].errors = Matrix.map(Activation.dlrelu, featuremaps[i].map);
+
+                input.featuremaps[i].errors = Matrix.hadamard(Matrix.map(Activation.dlrelu, featuremaps[i].map), featuremaps[i].map);
             }
         }
 
