@@ -41,6 +41,20 @@ namespace NeuralNetwork.Core
             }
         }
 
+        public void randomize(Random r, float min, float max)
+        {
+            float range = max - min;
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    float f = (float)r.NextDouble() * range + min;
+                    data[i, j] = f;
+                }
+            }
+        }
+
         public static Matrix transpose(Matrix m)
         {
             Matrix output = new Matrix(m.cols, m.rows);

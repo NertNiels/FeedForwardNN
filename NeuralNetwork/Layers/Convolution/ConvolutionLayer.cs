@@ -147,7 +147,9 @@ namespace NeuralNetwork.Layers.Convolution
 
                             float sum = multiplied.sum();
                             deltas.data[xOut, yOut] = sum;
+                            yOut++;
                         }
+                        xOut++;
                     }
 
                     xOut = 0;
@@ -157,7 +159,7 @@ namespace NeuralNetwork.Layers.Convolution
                         for (int y = -1 + features.Padding; y < featuremaps.Height - input.filters.Height + 2 - features.Padding; y++)
                         {
                             Matrix sub = Matrix.subMatrix(mapOut.errors, x, y, input.filters.Width, input.filters.Height);
-                            Matrix multiplied = Matrix.hadamard(sub, kernel);
+                            Matrix multiplied = Matrix.hadamard(sub, kernel.flip());
 
                             float sum = multiplied.sum();
 

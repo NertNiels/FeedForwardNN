@@ -25,36 +25,30 @@ namespace FeedForward
             LayerBase[] layers = new LayerBase[]
             {
                 new InputLayer(1, 6, 6, 1, 4, 4, 0, 1),
-                new ConvolutionLayer(1, 6, 6, 4, 4, 1, 2, 2, 0, 1),
+                new ConvolutionLayer(1, 6, 6, 4, 4, 1, 3, 3, 0, 1),
                 new NeuralNetwork.Layers.Convolution.LeakyReluLayer(),
-                new ConvolutionLayer(1, 3, 3, 2, 2, 0, 0, 0, 0, 1),
+                new ConvolutionLayer(1, 4, 4, 3, 3, 1, 2, 2, 0, 1),
+                new NeuralNetwork.Layers.Convolution.LeakyReluLayer(),
+                new ConvolutionLayer(1, 2, 2, 2, 2, 0, 0, 0, 0, 1),
                 new NeuralNetwork.Layers.Convolution.LeakyReluLayer()
             };
 
-            Matrix input = new Matrix(6, 6)
-            {
-                data = new float[,]
-                {
-                    { 0.2f,     0.4f,   0.1f,   0.7f,   0.76f,  0.54f },
-                    { 0.2f,     0.4f,   0.54f,  0.1f,   0.7f,   0.76f },
-                    { 0.2f,     0.4f,   0.1f,   0.54f,  0.7f,   0.76f },
-                    { 0.2f,     0.1f,   0.4f,   0.7f,   0.76f,  0.54f },
-                    { 0.2f,     0.4f,   0.1f,   0.7f,   0.76f,  0.54f },
-                    { 0.2f,     0.4f,   0.1f,   0.7f,   0.76f,  0.54f },
-                }
-            };
 
-            Matrix targets = new Matrix(2, 2)
+            Random r = new Random();
+
+            Matrix input = new Matrix(6, 6);
+            input.randomize(r, 0f, 1f);
+
+            Matrix targets = new Matrix(1, 1)
             {
                 data = new float[,]
                 {
-                    { 0.4f,     0.5f },
-                    { 0.1f,     0.7f },
+                    { 0.4f }
                 }
             };
 
             Model model = new Model(layers);
-            model.randomizeWeights(new Random());
+            model.randomizeWeights(r);
 
             Console.WriteLine("Input:");
             Matrix.table(input);
@@ -62,7 +56,7 @@ namespace FeedForward
             Console.WriteLine("Output Before:");
             Matrix.table(model.ConvolutionFeedForward(input));
 
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 2000; i++)
             {
                 Matrix output = model.ConvolutionFeedForward(input);
                 model.Backpropagate(output, targets);

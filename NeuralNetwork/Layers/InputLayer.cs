@@ -48,16 +48,29 @@ namespace NeuralNetwork.Layers
 
         public override void initWeights(Random r, LayerBase nextLayer)
         {
-            this.weights = new Matrix(nextLayer.nodes, this.nodes);
-            this.bias = new Matrix(this.nodes, 1);
-            weights.randomize(r);
-            this.bias.randomize(r);
+            if (this.LayerType == LayerType.Input)
+            {
+                this.weights = new Matrix(nextLayer.nodes, this.nodes);
+                this.bias = new Matrix(this.nodes, 1);
+                weights.randomize(r);
+                this.bias.randomize(r);
+            } else if(this.LayerType == LayerType.ConvolutionInput)
+            {
+                filters.Randomize(r);
+            }
         }
 
         public override void initWeights(Random r)
         {
-            this.bias = new Matrix(this.nodes, 1);
+            if (this.LayerType == LayerType.Input)
+            {
+                this.bias = new Matrix(this.nodes, 1);
             this.bias.randomize(r);
+            }
+            else if (this.LayerType == LayerType.ConvolutionInput)
+            {
+                filters.Randomize(r);
+            }
         }
     }
 }

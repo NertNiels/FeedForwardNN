@@ -13,7 +13,7 @@ namespace NeuralNetwork.Core
     {
         public LayerBase[] layers;
 
-        public static float LearningRate = 0.01f;
+        public static float LearningRate = 0.001f;
 
         public String Name;
         public String Description;
