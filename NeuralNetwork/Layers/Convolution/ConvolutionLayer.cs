@@ -163,7 +163,7 @@ namespace NeuralNetwork.Layers.Convolution
 
                             float sum = multiplied.sum();
 
-                            input.featuremaps[k].errors.data[xOut, yOut] = sum;
+                            input.featuremaps[k].errors.data[xOut, yOut] += sum;
 
                             yOut += features.Stride;
                         }

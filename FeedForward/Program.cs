@@ -43,7 +43,7 @@ namespace FeedForward
             {
                 data = new float[,]
                 {
-                    { 0.4f }
+                    { 0.5f }
                 }
             };
 
@@ -56,7 +56,7 @@ namespace FeedForward
             Console.WriteLine("Output Before:");
             Matrix.table(model.ConvolutionFeedForward(input));
 
-            for (int i = 0; i < 2000; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 Matrix output = model.ConvolutionFeedForward(input);
                 model.Backpropagate(output, targets);
