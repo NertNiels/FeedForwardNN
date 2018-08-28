@@ -146,7 +146,7 @@ namespace NeuralNetwork.Layers.Convolution
                             Matrix multiplied = Matrix.hadamard(sub, mapOut.errors.flip());
 
                             float sum = multiplied.sum();
-                            deltas.data[xOut, yOut] = sum;
+                            deltas.data[xOut, yOut] += sum;
                             yOut++;
                         }
                         xOut++;
